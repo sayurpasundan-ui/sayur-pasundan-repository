@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2f6b39">
+  <meta name="description" content="Belanja sayur, buah, bumbu, lauk-pauk, dan kebutuhan dapur di Sayur Pasundan. Rencanakan masakan Anda dengan lebih praktis.">
+  <meta property="og:title" content="Sayur Pasundan — Rencanakan Masakan Anda">
+  <meta property="og:description" content="Kebutuhan dapur keluarga, lebih praktis dalam satu tempat.">
+  <meta property="og:type" content="website">
+  <title>Sayur Pasundan — Rencanakan Masakan Anda</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icon-192.png" type="image/png">
+  <link rel="preload" as="image" href="/assets/images/brand/hero-jadwal-desktop.webp" media="(min-width: 681px)" fetchpriority="high">
+  <link rel="preload" as="image" href="/assets/images/brand/hero-jadwal-mobile.webp" media="(max-width: 680px)" fetchpriority="high">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/app.js" defer></script>
+</head>
+<body>
+  <div class="announcement"><span class="announcement-leaf" aria-hidden="true">✦</span><span>Gratis ongkir untuk belanja minimal <strong>Rp50.000</strong></span><a href="#cara-belanja">Lihat cara belanja</a></div>
+
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Beranda Sayur Pasundan">
+      <img class="brand-wordmark" src="/assets/images/brand/logo-sayur-pasundan.webp" alt="Logo Sayur Pasundan" width="148" height="90">
+      <span class="brand-caption">Rencanakan Masakan Anda</span>
+    </a>
+    <nav class="desktop-links" aria-label="Navigasi utama">
+      <a class="desktop-link-active" href="/">Beranda</a>
+      <a href="#kategori">Kategori</a>
+      <a href="#katalog">Belanja</a>
+      <a href="#keunggulan">Keunggulan</a>
+    </nav>
+    <div class="header-actions">
+      <label class="search-box"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" list="productSuggestions" placeholder="Cari sayur, buah, bumbu..." aria-label="Cari produk" autocomplete="off"><datalist id="productSuggestions"></datalist></label>
+      <button class="button button-dark cart-open" id="openCart" type="button"><span aria-hidden="true">🛒</span> Keranjang <b id="cartCount">0</b></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="home-hero" aria-label="Informasi utama Sayur Pasundan">
+      <div class="container">
+        <div class="hero-slider" id="heroSlider" role="region" aria-roledescription="carousel" aria-label="Banner informasi Sayur Pasundan">
+          <div class="hero-slides">
+            <div class="hero-slide is-active" data-slide="0" aria-hidden="false">
+              <picture>
+                <source media="(max-width: 680px)" srcset="/assets/images/brand/hero-jadwal-mobile.webp">
+                <img src="/assets/images/brand/hero-jadwal-desktop.webp" alt="Jadwal pengiriman Sayur Pasundan: pesanan pukul 13.00–23.59 dikirim 06.00–07.00, pukul 00.00–05.00 dikirim 08.00–09.00, dan pukul 05.01–12.59 dikirim 16.00–17.00." width="1920" height="960" fetchpriority="high">
+              </picture>
+            </div>
+            <div class="hero-slide" data-slide="1" aria-hidden="true" inert>
+              <picture>
+                <source media="(max-width: 680px)" srcset="/assets/images/brand/hero-customer-service-mobile.webp">
+                <img src="/assets/images/brand/hero-customer-service-desktop.webp" alt="Customer service Sayur Pasundan siap membantu melalui WhatsApp." width="1920" height="960" loading="lazy">
+              </picture>
+            </div>
+            <div class="hero-slide" data-slide="2" aria-hidden="true" inert>
+              <picture>
+                <source media="(max-width: 680px)" srcset="/assets/images/brand/hero-gratis-ongkir-mobile.webp">
+                <img src="/assets/images/brand/hero-gratis-ongkir-desktop.webp" alt="Gratis ongkir untuk minimum pembelian Rp50.000." width="1920" height="960" loading="lazy">
+              </picture>
+            </div>
+            <div class="hero-slide" data-slide="3" aria-hidden="true" inert>
+              <picture>
+                <source media="(max-width: 680px)" srcset="/assets/images/brand/hero-catatan-mobile.webp">
+                <img src="/assets/images/brand/hero-catatan-desktop.webp" alt="Catatan informasi biaya pengiriman dan penyesuaian operasional." width="1920" height="960" loading="lazy">
+              </picture>
+            </div>
+          </div>
+          <button class="hero-arrow hero-prev" id="heroPrev" type="button" aria-label="Banner sebelumnya">‹</button>
+          <button class="hero-arrow hero-next" id="heroNext" type="button" aria-label="Banner berikutnya">›</button>
+          <div class="hero-slider-controls">
+            <div class="hero-dots" role="group" aria-label="Pilih banner">
+              <button class="hero-dot is-active" type="button" data-hero-dot="0" aria-label="Banner 1: Jadwal pengiriman" aria-current="true"></button>
+              <button class="hero-dot" type="button" data-hero-dot="1" aria-label="Banner 2: Customer service" aria-current="false"></button>
+              <button class="hero-dot" type="button" data-hero-dot="2" aria-label="Banner 3: Gratis ongkir" aria-current="false"></button>
+              <button class="hero-dot" type="button" data-hero-dot="3" aria-label="Banner 4: Catatan pengiriman" aria-current="false"></button>
+            </div>
+            <span class="hero-slider-caption">Info belanja & pengiriman</span>
+          </div>
+        </div>
+        <div class="hero-under-note"><span class="hero-check" aria-hidden="true">✓</span><span>Belanja kebutuhan dapur lebih praktis, dengan informasi yang jelas sejak awal.</span><a href="#katalog">Mulai belanja <span aria-hidden="true">→</span></a></div>
+      </div>
+    </section>
+
+    <section class="container active-promotions-section" id="activePromotions" hidden aria-label="Promo aktif">
+      <div class="active-promotions-heading"><div><p class="eyebrow">PROMO TOKO</p><h2>Penawaran Sayur Pasundan</h2></div><p class="muted tiny">Periksa syarat dan periode promo sebelum melakukan pembayaran.</p></div>
+      <div class="active-promotion-list" id="activePromotionList"></div>
+    </section>
+
+    <section class="container categories-section" id="kategori">
+      <div class="section-heading category-heading"><div><p class="eyebrow">PILIH SESUAI KEBUTUHAN</p><h1 class="section-title">Apa yang mau dimasak hari ini?</h1><p class="muted">Temukan bahan dapur favorit Anda dari kategori pilihan.</p></div><a class="text-link" href="#katalog">Lihat semua produk <span aria-hidden="true">→</span></a></div>
+      <div class="category-gallery" id="categoryGallery" aria-label="Kategori pilihan">
+        <button class="category-tile" type="button" data-category-key="sayur" aria-label="Lihat kategori sayuran"><img src="/assets/images/brand/kategori-sayuran.webp" alt="Kategori sayuran" width="500" height="500" loading="lazy"></button>
+        <button class="category-tile" type="button" data-category-key="buah" aria-label="Lihat kategori buah"><img src="/assets/images/brand/kategori-buah.webp" alt="Kategori buah" width="500" height="500" loading="lazy"></button>
+        <button class="category-tile" type="button" data-category-key="bumbu" aria-label="Lihat kategori bumbu dan rempah"><img src="/assets/images/brand/kategori-bumbu-rempah.webp" alt="Kategori bumbu dan rempah" width="500" height="500" loading="lazy"></button>
+        <button class="category-tile" type="button" data-category-key="lauk" aria-label="Lihat kategori lauk-pauk"><img src="/assets/images/brand/kategori-lauk-pauk.webp" alt="Kategori lauk-pauk" width="500" height="500" loading="lazy"></button>
+        <button class="category-tile" type="button" data-category-key="dapur" aria-label="Lihat kategori perlengkapan dapur"><img src="/assets/images/brand/kategori-perlengkapan-dapur.webp" alt="Kategori perlengkapan dapur" width="500" height="500" loading="lazy"></button>
+        <button class="category-tile" type="button" data-category-key="groceries" aria-label="Lihat kategori groceries"><img src="/assets/images/brand/kategori-groceries.webp" alt="Kategori groceries" width="500" height="500" loading="lazy"></button>
+      </div>
+    </section>
+
+    <section class="container benefits-section" id="keunggulan" aria-label="Keunggulan Sayur Pasundan">
+      <div class="section-heading"><div><p class="eyebrow">BELANJA LEBIH TENANG</p><h2 class="section-title">Praktis dari pilih hingga sampai rumah</h2><p class="muted">Kami ingin membantu kebutuhan dapur harian jadi lebih mudah.</p></div></div>
+      <div class="benefit-gallery">
+        <div class="benefit-tile"><img src="/assets/images/brand/keunggulan-antar-rumah.webp" alt="Antar sampai rumah" width="746" height="527" loading="lazy"></div>
+        <div class="benefit-tile"><img src="/assets/images/brand/keunggulan-proses-cepat.webp" alt="Pesanan diproses cepat" width="746" height="527" loading="lazy"></div>
+        <div class="benefit-tile"><img src="/assets/images/brand/keunggulan-pilihan-kualitas.webp" alt="Pilihan sayur lengkap dan kualitas terjamin" width="746" height="527" loading="lazy"></div>
+        <div class="benefit-tile"><img src="/assets/images/brand/keunggulan-praktis-hemat.webp" alt="Praktis dan hemat" width="746" height="527" loading="lazy"></div>
+        <div class="benefit-tile"><img src="/assets/images/brand/keunggulan-garansi-retur.webp" alt="Garansi retur" width="746" height="527" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section class="container planner-banner" id="cara-belanja">
+      <div class="planner-copy"><p class="eyebrow">RENCANAKAN MASAKAN ANDA</p><h2>Belanja lebih terarah,<br><em>masak jadi lebih mudah.</em></h2><p>Pilih produk, tentukan varian dan satuan yang sesuai, lalu lanjutkan pemesanan dengan mudah.</p><a class="button button-orange" href="#katalog">Temukan bahan masakan <span aria-hidden="true">→</span></a></div>
+      <div class="planner-stamp" aria-hidden="true"><span>🥬</span><strong>Segar</strong><small>untuk dapur keluarga</small></div>
+    </section>
+
+    <section class="container showcase-section" id="bestSellerSection" hidden>
+      <div class="section-heading"><div><p class="eyebrow">BERDASARKAN TRANSAKSI</p><h2>Produk terlaris</h2><p class="muted">Diurutkan dari produk yang benar-benar paling banyak terjual.</p></div><a class="text-link" href="#katalog">Jelajahi katalog →</a></div>
+      <div class="product-grid showcase-grid" id="bestSellerGrid"></div>
+    </section>
+
+    <section class="container showcase-section" id="featuredSection" hidden>
+      <div class="section-heading"><div><p class="eyebrow">PILIHAN TOKO</p><h2>Produk unggulan</h2><p class="muted">Pilihan yang ditandai sebagai unggulan di data produk.</p></div><a class="text-link" href="#katalog">Lihat semua →</a></div>
+      <div class="product-grid showcase-grid" id="featuredGrid"></div>
+    </section>
+
+    <section class="container showcase-section" id="newProductSection" hidden>
+      <div class="section-heading"><div><p class="eyebrow">BARU DI KATALOG</p><h2>Produk terbaru</h2><p class="muted">Produk yang paling baru ditambahkan ke katalog.</p></div><a class="text-link" href="#katalog">Lihat semua →</a></div>
+      <div class="product-grid showcase-grid" id="newProductGrid"></div>
+    </section>
+
+    <section class="container catalog-section" id="katalog">
+      <div class="section-heading"><div><p class="eyebrow">KATALOG PRODUK</p><h2>Temukan bahan pilihan</h2><p class="muted">Pilih kategori, saring harga, atau cari nama produk.</p></div><span class="result-count" id="resultCount">Memuat katalog…</span></div>
+      <div class="category-chips" id="categoryChips" aria-label="Filter kategori"><button type="button" class="chip active" data-category="">Semua</button></div>
+      <div class="catalog-toolbar" aria-label="Filter dan urutkan produk">
+        <label>Harga minimum<input id="minPrice" type="number" min="0" step="1000" inputmode="numeric" placeholder="Rp minimum"></label>
+        <label>Harga maksimum<input id="maxPrice" type="number" min="0" step="1000" inputmode="numeric" placeholder="Rp maksimum"></label>
+        <label class="featured-filter"><input id="featuredOnly" type="checkbox"> Produk unggulan saja</label>
+        <label>Urutkan<select id="sortProducts"><option value="recommended">Rekomendasi</option><option value="latest">Terbaru</option><option value="best">Terlaris</option><option value="price-asc">Harga terendah</option><option value="price-desc">Harga tertinggi</option></select></label>
+      </div>
+      <div class="status-banner" id="statusBanner" role="status" hidden></div>
+      <div class="product-grid" id="productGrid" aria-live="polite"></div>
+      <div class="product-pagination" id="productPagination" aria-label="Navigasi halaman produk"></div>
+    </section>
+
+    <section class="container closing-note"><div class="closing-icon" aria-hidden="true">🌿</div><div><strong>Dari dapur Anda, berawal dari bahan yang tepat.</strong><p>Jelajahi pilihan produk Sayur Pasundan dan susun kebutuhan belanja sesuai menu keluarga.</p></div><a href="#kategori">Jelajahi kategori <span aria-hidden="true">→</span></a></section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-columns">
+      <div class="footer-about"><a class="footer-brand" href="/" aria-label="Beranda Sayur Pasundan"><img class="footer-wordmark" src="/assets/images/brand/logo-sayur-pasundan.webp" alt="Logo Sayur Pasundan" width="190" height="115"><span class="brand-caption">Rencanakan Masakan Anda</span></a><p>Belanja sayuran, buah, bumbu, dan kebutuhan dapur keluarga dengan lebih praktis.</p><strong>CV Sahabat Raya Nusantara</strong></div>
+      <div><h2>Informasi</h2><nav aria-label="Informasi toko"><a href="#kategori">Kategori produk</a><a href="#katalog">Cara belanja</a><a href="/tentang-kami.html">Tentang kami</a><a href="/kebijakan-pengiriman.html">Pengiriman & retur</a></nav></div>
+      <div><h2>Kontak</h2><p>Gudang: Jl. Panggilingan, Kp. Pasir Angin, Desa Sukamantri, Kecamatan Paseh, Kabupaten Bandung, Jawa Barat 40383.</p><a href="https://wa.me/6281221031765" target="_blank" rel="noopener">WhatsApp 0812-2103-1765</a><a href="mailto:sayurpasundan@gmail.com">sayurpasundan@gmail.com</a></div>
+      <div><h2>Metode pembayaran</h2><p>Transfer manual dan COD jika wilayah sudah diaktifkan.</p><div id="footerPaymentMethods" class="footer-payment-methods" aria-label="Metode pembayaran"></div><a href="/admin/">Panel Admin</a></div>
+    </div>
+    <div class="container footer-bottom"><span>© <span id="yearNow"></span> Sayur Pasundan</span><span>Rencanakan Masakan Anda</span></div>
+  </footer>
+
+  <a class="floating-whatsapp" id="floatingWhatsApp" href="https://wa.me/6281221031765" target="_blank" rel="noopener" aria-label="Hubungi Sayur Pasundan melalui WhatsApp"><span aria-hidden="true">☏</span><span>Chat WhatsApp</span></a>
+  <nav class="mobile-nav" aria-label="Navigasi cepat"><a href="/" class="mobile-nav-active"><span aria-hidden="true">⌂</span>Beranda</a><a href="#kategori"><span aria-hidden="true">▦</span>Kategori</a><button type="button" id="mobileCart"><span aria-hidden="true">🛒<b id="mobileCartCount">0</b></span>Keranjang</button><a href="/lacak-pesanan"><span aria-hidden="true">⌕</span>Lacak pesanan</a></nav>
+
+  <div class="drawer-backdrop" id="cartBackdrop" hidden></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-labelledby="cartTitle" aria-modal="true" role="dialog" hidden>
+    <div class="drawer-head"><div><p class="eyebrow">PESANAN ANDA</p><h2 id="cartTitle">Keranjang belanja</h2></div><button class="icon-button" id="closeCart" aria-label="Tutup keranjang" type="button">✕</button></div>
+    <div id="cartItems" class="cart-items"><p class="empty-cart">Keranjang masih kosong.</p></div>
+    <div class="cart-summary"><div><span>Total sementara</span><strong id="cartTotal">Rp0</strong></div><p class="muted tiny">Harga dan ketersediaan akan dicek kembali saat konfirmasi pesanan.</p><button class="button button-orange full-width" id="checkoutOpen" type="button" disabled>Lanjut ke pemesanan →</button></div>
+  </aside>
+
+  <div class="modal-backdrop" id="checkoutBackdrop" hidden>
+    <section class="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+      <div class="drawer-head"><div><p class="eyebrow">LANGKAH TERAKHIR</p><h2 id="checkoutTitle">Data pemesanan</h2></div><button class="icon-button" id="closeCheckout" type="button" aria-label="Tutup">✕</button></div>
+      <form id="checkoutForm" class="form-stack">
+        <label>Nama lengkap *<input name="customer_name" required maxlength="120" autocomplete="name" placeholder="Nama penerima"></label>
+        <label>Nomor WhatsApp *<input name="customer_phone" required maxlength="40" autocomplete="tel" inputmode="tel" placeholder="08xxxxxxxxxx"></label>
+        <label>Alamat pengantaran *<textarea name="customer_address" required maxlength="500" rows="3" autocomplete="street-address" placeholder="Alamat lengkap, blok, nomor rumah"></textarea></label>
+        <label>Catatan (opsional)<textarea name="notes" maxlength="1000" rows="2" placeholder="Contoh: tomat pilih yang belum terlalu matang"></textarea></label>
+        <label>Kecamatan *<input name="customer_district" required maxlength="120" autocomplete="address-level3" placeholder="Contoh: Paseh"></label>
+        <label>Kota / Kabupaten *<input name="customer_city" required maxlength="120" value="Kabupaten Bandung" autocomplete="address-level2"></label>
+        <label>Provinsi *<input name="customer_province" required maxlength="120" value="Jawa Barat" autocomplete="address-level1"></label>
+        <div class="location-panel location-panel-map">
+          <div><strong>Lokasi pengantaran</strong><p id="locationStatus" class="muted tiny">Alamat lengkap wajib diisi. Anda juga bisa menyertakan tautan Google Maps agar kurir lebih mudah menemukan lokasi.</p></div>
+          <div class="location-controls">
+            <button class="button button-outline" type="button" id="getLocation">⌖ Ambil lokasi perangkat</button>
+            <a class="button button-outline" id="openGoogleMaps" href="https://www.google.com/maps" target="_blank" rel="noopener">Buka Google Maps ↗</a>
+          </div>
+          <label>Tautan lokasi Google Maps (opsional)<input type="url" name="customer_map_url" id="customerMapUrl" maxlength="1000" inputmode="url" placeholder="Tempel tautan lokasi yang dibagikan dari Google Maps"></label>
+          <button class="button button-dark" type="button" id="useMapLink">Gunakan tautan lokasi</button>
+          <small class="muted tiny">Untuk ongkir di bawah Rp50.000 dan COD, sistem perlu titik koordinat. Tautan Google Maps yang memuat koordinat akan dibaca otomatis; Anda juga dapat menggunakan tombol lokasi perangkat.</small>
+          <input type="hidden" name="customer_lat" id="customerLat">
+          <input type="hidden" name="customer_lng" id="customerLng">
+        </div>
+        <div class="shipping-quote" id="shippingQuote" aria-live="polite">Subtotal minimal Rp50.000 mendapat gratis ongkir. Untuk subtotal lebih rendah, tentukan lokasi pengantaran.</div>
+        <fieldset class="payment-methods-field"><legend>Metode pembayaran *</legend><div id="paymentMethodOptions" class="payment-method-options"><p class="muted">Memuat metode pembayaran…</p></div></fieldset>
+        <div class="checkout-breakdown">
+          <div><span>Subtotal barang</span><strong id="checkoutSubtotal">Rp0</strong></div>
+          <div><span>Ongkos kirim</span><strong id="checkoutShipping">Menunggu lokasi</strong></div>
+          <div class="checkout-total"><span>Total sementara</span><strong id="checkoutTotal">Rp0</strong></div>
+        </div>
+        <button class="button button-orange full-width" type="submit">Buat pesanan →</button>
+        <p class="tiny muted">Total final dihitung ulang oleh server. Transfer manual memiliki batas pembayaran 24 jam. COD hanya tersedia pada kecamatan yang diaktifkan toko dan maksimal Rp200.000.</p>
+      </form>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

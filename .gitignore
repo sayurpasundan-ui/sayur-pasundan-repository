@@ -1,0 +1,15 @@
+node_modules/
+.wrangler/
+.dev.vars
+.env
+.env.*
+!.dev.vars.example
+*.xls
+*.xlsx
+*.xlsm
+data/import/*
+!data/import/README.md
+generated/import/*
+!generated/import/.gitkeep
+.DS_Store
+Thumbs.db

@@ -1,0 +1,11 @@
+# Salin file ini menjadi .dev.vars. Jangan commit file .dev.vars.
+# Hanya untuk lokal; jangan menggunakan password/session secret produksi di komputer bersama.
+ADMIN_PASSWORD="GANTI_DENGAN_PASSWORD_LOKAL_YANG_KUAT"
+SESSION_SECRET="GANTI_DENGAN_STRING_ACAK_MINIMAL_32_KARAKTER"
+STORE_NAME="SAYUR PASUNDAN"
+STORE_TAGLINE="Rencanakan Masakan Anda"
+PUBLIC_WA_PHONE="6281221031765"
+COD_MAX_ORDER_TOTAL="200000"
+COD_ALLOWED_DISTRICTS="Paseh,Majalaya,Solokan Jeruk,Ciparay"
+COD_ALLOWED_CITY="Kabupaten Bandung"
+COD_ALLOWED_PROVINCE="Jawa Barat"

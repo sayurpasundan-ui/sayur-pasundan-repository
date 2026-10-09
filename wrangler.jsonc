@@ -1,0 +1,26 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "sayur-pasundan-local",
+  "compatibility_date": "2026-10-09",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "sayur-pasundan-local",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [
+    { "binding": "PRODUCT_IMAGES", "bucket_name": "sayur-pasundan-images-local" },
+    { "binding": "PAYMENT_PROOFS", "bucket_name": "sayur-pasundan-payment-proofs-local" }
+  ],
+  "vars": {
+    "STORE_NAME": "SAYUR PASUNDAN",
+    "STORE_TAGLINE": "Rencanakan Masakan Anda",
+    "PUBLIC_WA_PHONE": "6281221031765",
+    "COD_MAX_ORDER_TOTAL": "200000",
+    "COD_ALLOWED_DISTRICTS": "Paseh,Majalaya,Solokan Jeruk,Ciparay",
+    "COD_ALLOWED_CITY": "Kabupaten Bandung",
+    "COD_ALLOWED_PROVINCE": "Jawa Barat"
+  }
+}

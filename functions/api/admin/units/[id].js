@@ -1,0 +1,10 @@
+import { json, readJson, requireDb, normalizeStatus, numberOr, safeText, toIntBool, sameOrigin } from "../../../_lib/http.js";
+import { requireAdmin } from "../../../_lib/auth.js";
+export async function onRequestPut({request,env,params}){
+ const auth=await requireAdmin(request,env);if(!auth.ok)return auth.response;if(!sameOrigin(request))return json({error:"Origin tidak diizinkan."},403);
+ const id=Number(params.id),b=await readJson(request);if(!Number.isInteger(id)||id<=0||!b||!Number.isInteger(Number(b.id_varian))||!safeText(b.kode_satuan,60)||!safeText(b.nama_satuan,180))return json({error:"Data satuan tidak lengkap."},400);
+ const saleType=String(b.sale_type||"piece").toLowerCase();if(!["piece","pack","measure"].includes(saleType))return json({error:"sale_type harus piece, pack, atau measure."},400);
+ try{await requireDb(env).prepare(`UPDATE sale_units SET id_varian=?,kode_satuan=?,nama_satuan=?,sale_type=?,harga=?,allow_nominal_purchase=?,nominal_min=?,is_default=?,status=?,sort_order=?,keterangan=?,updated_at=strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id_satuan=?`).bind(Number(b.id_varian),safeText(b.kode_satuan,60),safeText(b.nama_satuan,180),saleType,numberOr(b.harga),toIntBool(b.allow_nominal_purchase),b.nominal_min===""||b.nominal_min==null?null:numberOr(b.nominal_min),toIntBool(b.is_default),normalizeStatus(b.status,"active"),numberOr(b.sort_order),safeText(b.keterangan),id).run();return json({ok:true});}
+ catch(e){return json({error:String(e?.message||"Gagal memperbarui satuan")},400);}
+}
+export async function onRequestDelete({request,env,params}){const auth=await requireAdmin(request,env);if(!auth.ok)return auth.response;if(!sameOrigin(request))return json({error:"Origin tidak diizinkan."},403);const id=Number(params.id);if(!Number.isInteger(id)||id<=0)return json({error:"ID satuan tidak valid."},400);try{await requireDb(env).prepare("UPDATE sale_units SET status='archived',updated_at=strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id_satuan=?").bind(id).run();return json({ok:true,message:"Satuan diarsipkan."});}catch{return json({error:"Satuan gagal diarsipkan."},400);}}

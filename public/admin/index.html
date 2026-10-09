@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2f6b39">
+  <title>Admin — Sayur Pasundan</title>
+  <link rel="icon" href="/icon-192.png" type="image/png">
+  <link rel="stylesheet" href="/assets/style.css"><link rel="stylesheet" href="/admin/admin.css">
+  <script src="/admin/admin.js" defer></script>
+</head>
+<body class="admin-body">
+  <header class="admin-header"><a class="brand" href="/" aria-label="Beranda Sayur Pasundan"><span class="brand-mark brand-logo-wrap"><img src="/assets/images/brand/logo-aplikasi.webp" alt="" width="44" height="42"></span><span><strong>SAYUR PASUNDAN</strong><small>Admin Panel · CV Sahabat Raya Nusantara</small></span></a><a href="/" class="back-link">← Lihat website</a></header>
+  <main class="admin-main">
+    <section id="loginPanel" class="login-card">
+      <div class="login-icon"><img src="/assets/images/brand/logo-aplikasi.webp" alt="Logo Sayur Pasundan" width="46" height="44"></div><p class="eyebrow">AREA TERBATAS</p><h1>Masuk ke Admin</h1><p class="muted">Panel khusus pemilik untuk mengelola produk, pesanan, konten, dan pengaturan toko.</p>
+      <form id="loginForm" class="form-stack"><label>Password admin<input type="password" name="password" autocomplete="current-password" required autofocus></label><button class="button button-orange full-width" type="submit">Masuk ke panel →</button><p class="admin-error" id="loginError" hidden></p></form>
+    </section>
+    <section id="adminPanel" hidden>
+      <div class="admin-title"><div><p class="eyebrow">PENGELOLAAN TOKO</p><h1>Dashboard Admin</h1><p class="muted">Kelola bisnis dari satu panel. Perubahan disimpan ke database D1.</p></div><div class="admin-title-actions"><a href="/" class="button button-outline">Lihat toko</a><button class="button button-dark" id="logoutButton" type="button">Keluar</button></div></div>
+      <div class="admin-notice" id="adminNotice" role="status" hidden></div>
+      <nav class="admin-tabs" aria-label="Menu admin">
+        <button type="button" class="selected" data-tab="dashboard">Ringkasan</button><button type="button" data-tab="orders">Pesanan</button><button type="button" data-tab="products">Produk</button><button type="button" data-tab="categories">Kategori</button><button type="button" data-tab="variants">Varian</button><button type="button" data-tab="units">Satuan & Harga</button><button type="button" data-tab="photos">Foto Produk</button><button type="button" data-tab="banners">Banner</button><button type="button" data-tab="promotions">Promo</button><button type="button" data-tab="paymentMethods">Pembayaran</button><button type="button" data-tab="settings">Pengaturan Toko</button>
+      </nav>
+      <section id="dashboardOverview" class="dashboard-overview" aria-label="Ringkasan toko">
+        <div class="dashboard-heading"><div><p class="eyebrow">RINGKASAN TOKO</p><h2>Aktivitas toko</h2><p class="muted">Penjualan dihitung dari pesanan yang pembayarannya sudah terverifikasi.</p></div><button class="button button-outline" id="refreshDashboard" type="button">↻ Perbarui ringkasan</button></div>
+        <div class="metric-grid" id="metricGrid"><div class="metric-card"><span>Pesanan hari ini</span><strong>—</strong></div><div class="metric-card"><span>Menunggu verifikasi</span><strong>—</strong></div><div class="metric-card"><span>Penjualan hari ini</span><strong>—</strong></div><div class="metric-card"><span>Penjualan bulan ini</span><strong>—</strong></div></div>
+        <div class="dashboard-lower"><section class="admin-card"><div class="card-heading"><h3>Pesanan terbaru</h3><button class="text-button" type="button" data-go-tab="orders">Lihat semua →</button></div><div id="recentOrders" class="recent-order-list"><p class="muted">Memuat ringkasan…</p></div></section><section class="admin-card"><div class="card-heading"><h3>Kesiapan toko</h3></div><div id="storeReadiness" class="readiness-list"><p class="muted">Memeriksa konfigurasi…</p></div></section></div>
+      </section>
+      <section id="storeSettingsPanel" class="settings-panel" hidden>
+        <div class="dashboard-heading"><div><p class="eyebrow">KONFIGURASI</p><h2>Pengaturan toko</h2><p class="muted">Nilai ini digunakan di situs dan perhitungan pesanan setelah migrasi Tahap 3 dijalankan.</p></div></div>
+        <form id="settingsForm" class="settings-form">
+          <fieldset><legend>Identitas dan kontak</legend><div class="settings-grid"><label>Nama toko<input name="store_name" required maxlength="160"></label><label>Tagline<input name="tagline" required maxlength="200"></label><label>Nomor WhatsApp toko<input name="whatsapp_phone" required inputmode="tel" maxlength="24"></label><label>Email toko<input name="store_email" type="email" maxlength="200"></label><label class="wide">Alamat gudang<textarea name="warehouse_address" rows="2" maxlength="500" required></textarea></label></div></fieldset>
+          <fieldset><legend>Koordinat gudang</legend><div class="settings-grid"><label>Latitude<input name="warehouse_lat" type="number" step="any" min="-90" max="90" required></label><label>Longitude<input name="warehouse_lng" type="number" step="any" min="-180" max="180" required></label></div><p class="muted tiny">Nilai awal memakai koordinat gudang yang Anda berikan: -7.059522, 107.764035.</p></fieldset>
+          <fieldset><legend>Ongkos kirim</legend><div class="settings-grid"><label>Gratis ongkir mulai (Rp)<input name="free_shipping_minimum" type="number" min="0" step="1" required></label><label>Ongkir hingga radius (Rp)<input name="near_shipping_fee" type="number" min="0" step="1" required></label><label>Ongkir di atas radius (Rp)<input name="far_shipping_fee" type="number" min="0" step="1" required></label><label>Radius ongkir dekat (km)<input name="near_radius_km" type="number" min="0" step="0.1" required></label></div></fieldset>
+          <fieldset><legend>Transfer dan COD</legend><div class="settings-grid"><label>Batas pembayaran transfer (jam)<input name="transfer_expiry_hours" type="number" min="1" max="168" step="1" required></label><label>Maksimum COD termasuk ongkir (Rp)<input name="cod_max_order_total" type="number" min="1" step="1" required></label><label>Kabupaten COD<input name="cod_allowed_city" required maxlength="160"></label><label>Provinsi COD<input name="cod_allowed_province" required maxlength="160"></label><label class="wide">Daftar kecamatan COD (pisahkan dengan koma)<input name="cod_allowed_districts" required maxlength="500"><small>Nilai awal: Paseh, Majalaya, Solokan Jeruk, Ciparay.</small></label><label class="check-field"><input name="cod_enabled" type="checkbox"> Aktifkan metode COD</label></div><p class="muted tiny">Nonaktifkan COD apabila daftar wilayah belum siap. Validasi server tetap menjadi sumber utama; browser hanya memberi estimasi.</p></fieldset>
+          <p id="settingsError" class="admin-error" hidden></p><div class="settings-actions"><button class="button button-orange" type="submit">Simpan pengaturan</button><button class="button button-outline" type="button" id="reloadSettings">Muat ulang nilai</button></div>
+        </form>
+      </section>
+      <section id="resourcePanel" hidden>
+        <div class="admin-toolbar"><label class="admin-search">Cari data<input type="search" id="adminSearch" placeholder="Nama, SKU, nomor pesanan…"></label><div class="resource-actions"><button class="button button-orange" id="addRecord" type="button">＋ Tambah data</button><button class="button button-outline" id="importCsv" type="button" hidden>Impor CSV produk</button><input id="csvFile" type="file" accept=".csv,text/csv" hidden><button class="button button-outline" id="refreshData" type="button">↻ Muat ulang</button></div></div>
+        <p id="resourceHelp" class="muted tiny" hidden></p>
+        <div class="admin-table-wrap"><table class="admin-table"><thead id="tableHead"></thead><tbody id="tableBody"><tr><td>Memuat…</td></tr></tbody></table></div>
+      </section>
+    </section>
+  </main>
+  <dialog id="recordDialog" class="record-dialog"><form id="recordForm" class="form-stack"><div class="dialog-heading"><div><p class="eyebrow" id="dialogEyebrow">EDIT DATA</p><h2 id="dialogTitle">Ubah data</h2></div><button type="button" class="icon-button" id="dialogClose" aria-label="Tutup">✕</button></div><div id="formFields" class="form-grid"></div><p id="formError" class="admin-error" hidden></p><div class="dialog-actions"><button class="button button-outline" type="button" id="dialogCancel">Batal</button><button class="button button-orange" type="submit" id="dialogSave">Simpan perubahan</button></div></form></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

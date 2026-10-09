@@ -1,0 +1,20 @@
+{
+  "name": "sayur-pasundan",
+  "private": true,
+  "version": "0.8.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev public",
+    "audit:excel": "node scripts/audit-excel.mjs",
+    "import:excel": "node scripts/import-excel.mjs",
+    "check:js": "node scripts/check-js.mjs",
+    "check:stage1": "node scripts/check-stage1.mjs",
+    "check:stage2": "node scripts/check-stage2.mjs",
+    "check:stage3": "node scripts/check-stage3.mjs",
+    "check:stage4": "node scripts/check-stage4.mjs"
+  },
+  "devDependencies": {
+    "exceljs": "^4.4.0",
+    "wrangler": "^4.40.0"
+  }
+}

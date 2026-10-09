@@ -1,0 +1,14 @@
+{
+  "$schema": "https://schemas.cloudflare.com/wrangler/configuration.json",
+  "name": "sayur-pasundan-order-expiry",
+  "main": "workers/order-expiry.js",
+  "compatibility_date": "2026-10-09",
+  "triggers": { "crons": ["*/15 * * * *"] },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "sayur-pasundan-db",
+      "database_id": "GANTI_DENGAN_D1_DATABASE_ID"
+    }
+  ]
+}

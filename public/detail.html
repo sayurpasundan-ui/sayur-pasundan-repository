@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#124b2b">
+  <meta name="description" content="Detail produk Sayur Pasundan. Pilih varian dan satuan jual sesuai kebutuhan dapur Anda.">
+  <title>Detail Produk — Sayur Pasundan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="/icon-192.png" type="image/png">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/detail.js" defer></script>
+</head>
+<body class="detail-page">
+  <div class="announcement"><span>Belanja kebutuhan dapur lebih praktis di Sayur Pasundan</span><a href="/">Kembali ke beranda</a></div>
+  <header class="site-header detail-header">
+    <a class="brand" href="/" aria-label="Beranda Sayur Pasundan"><img class="brand-wordmark" src="/assets/images/brand/logo-sayur-pasundan.webp" alt="Logo Sayur Pasundan" width="148" height="90"><span class="brand-caption">Rencanakan Masakan Anda</span></a>
+    <div class="detail-header-actions"><a class="button button-dark" href="/?keranjang=1">🛒 Buka Keranjang</a><a class="button button-light" href="/">Lanjut Belanja</a></div>
+  </header>
+  <main class="container detail-main">
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Beranda</a><span>›</span><a href="/#katalog">Katalog</a><span>›</span><span id="breadcrumbProduct">Detail produk</span></nav>
+    <div class="status-banner" id="detailStatus" role="status">Memuat detail produk…</div>
+    <section id="productDetail" class="detail-layout" hidden>
+      <div class="detail-image-panel"><div class="detail-image-frame is-empty" id="detailImageFrame"><img id="detailImage" alt="" width="900" height="900" hidden></div><p class="detail-image-note" id="detailImageNote">Foto produk belum diunggah.</p><button class="button button-light detail-zoom-button" id="detailZoom" type="button" hidden>Perbesar foto</button></div>
+      <div class="detail-information">
+        <p class="eyebrow" id="detailCategory">PRODUK PILIHAN</p>
+        <h1 id="detailName">Produk</h1>
+        <p id="detailShortDescription" class="detail-short-description"></p>
+        <div class="detail-price"><strong id="detailPrice">—</strong><span id="detailPriceUnit"></span></div>
+        <div class="detail-purchase-fields">
+          <label>Merk / varian<select id="detailVariant" class="select-field"></select></label>
+          <label>Satuan jual<select id="detailUnit" class="select-field"></select></label>
+          <label>Jumlah<input id="detailQuantity" class="quantity-field" type="number" min="1" step="1" value="1"></label>
+        </div>
+        <p class="detail-stock" id="detailStock">Tersedia</p>
+        <div class="detail-actions"><button class="button button-dark" id="detailAdd" type="button">Tambah ke Keranjang</button><button class="button button-orange" id="detailBuy" type="button">Beli Sekarang</button></div>
+        <p class="detail-note">Stok untuk katalog ini dikonfigurasi tidak dibatasi. Harga akhir dan ketersediaan selalu divalidasi ulang ketika pesanan dikirim.</p>
+      </div>
+    </section>
+    <section class="detail-copy-grid" id="detailCopyGrid" hidden>
+      <article class="detail-copy-card"><h2>Deskripsi produk</h2><p id="detailDescription"></p></article>
+      <article class="detail-copy-card"><h2>Tips penyimpanan</h2><p id="detailStorage"></p></article>
+      <article class="detail-copy-card"><h2>Ide memasak</h2><p id="detailCooking"></p></article>
+    </section>
+    <section class="related-section" id="relatedSection" hidden><div class="section-heading"><div><p class="eyebrow">LENGKAPI BELANJA ANDA</p><h2>Produk terkait</h2><p class="muted">Pilihan produk yang bisa dipertimbangkan bersama produk ini.</p></div></div><div class="related-grid" id="relatedGrid"></div></section>
+  </main>
+  <footer class="site-footer"><div class="container detail-footer"><a class="footer-brand" href="/"><img class="footer-wordmark" src="/assets/images/brand/logo-sayur-pasundan.webp" alt="Logo Sayur Pasundan" width="190" height="115"><span class="brand-caption">Rencanakan Masakan Anda</span></a><span>© <span id="yearNow"></span> Sayur Pasundan · CV Sahabat Raya Nusantara</span></div></footer>
+  <nav class="mobile-nav" aria-label="Navigasi cepat"><a href="/"><span aria-hidden="true">⌂</span>Beranda</a><a href="/#kategori"><span aria-hidden="true">▦</span>Kategori</a><a href="/?keranjang=1"><span aria-hidden="true">🛒</span>Keranjang</a><a href="/lacak-pesanan"><span aria-hidden="true">⌕</span>Lacak pesanan</a></nav>
+  <dialog class="photo-zoom-dialog" id="photoZoomDialog" aria-label="Foto produk diperbesar"><form method="dialog"><button class="photo-zoom-close" aria-label="Tutup foto diperbesar">Tutup ✕</button></form><img id="zoomImage" alt="Foto produk diperbesar"></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

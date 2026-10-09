@@ -1,0 +1,32 @@
+name: Validate repository
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check JavaScript syntax
+        run: node scripts/check-js.mjs
+      - name: Check Stage 1 catalog
+        run: node scripts/check-stage1.mjs
+      - name: Check Stage 2 checkout and payments
+        run: node scripts/check-stage2.mjs
+      - name: Check Stage 3 Admin and settings
+        run: node scripts/check-stage3.mjs
+      - name: Check Stage 4 security and local readiness
+        run: npm run check:stage4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check D1 schema
+        run: python scripts/check-schema.py

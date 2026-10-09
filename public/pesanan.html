@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2f6b39"><meta name="robots" content="noindex,follow">
+  <meta name="description" content="Konfirmasi pembayaran dan lacak pesanan Sayur Pasundan.">
+  <title>Pesanan Saya — Sayur Pasundan</title>
+  <link rel="icon" href="/icon-192.png" type="image/png"><link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/order.js" defer></script>
+</head>
+<body class="info-page order-page">
+  <div class="announcement">Informasi pembayaran dan status pesanan · Sayur Pasundan</div>
+  <header class="site-header"><a class="brand" href="/" aria-label="Beranda Sayur Pasundan"><img class="brand-wordmark" src="/assets/images/brand/logo-sayur-pasundan.webp" alt="Logo Sayur Pasundan" width="148" height="90"><span class="brand-caption">Rencanakan Masakan Anda</span></a><a class="button button-dark" href="/">Kembali belanja</a></header>
+  <main class="container info-main order-main">
+    <nav class="breadcrumbs"><a href="/">Beranda</a><span>›</span><span>Pesanan saya</span></nav>
+    <section class="info-card order-track-card">
+      <p class="eyebrow">PESANAN TAMU</p><h1>Pesanan & pembayaran</h1>
+      <p class="muted">Gunakan kode pesanan dan nomor WhatsApp yang dimasukkan saat checkout untuk melihat status dan petunjuk pembayaran.</p>
+      <form id="trackForm" class="form-stack track-form">
+        <label>Kode pesanan *<input name="order_code" required maxlength="40" placeholder="SP-…" autocomplete="off"></label>
+        <label>Nomor WhatsApp *<input name="customer_phone" required maxlength="40" inputmode="tel" placeholder="08xxxxxxxxxx" autocomplete="tel"></label>
+        <button class="button button-orange full-width" type="submit">Lacak pesanan</button>
+      </form>
+      <p class="order-alert" id="orderMessage" role="status" aria-live="polite" hidden></p>
+    </section>
+    <section class="order-result" id="orderResult" hidden>
+      <div class="order-summary-card">
+        <div class="order-summary-heading"><div><p class="eyebrow">KODE PESANAN</p><h2 id="orderCodeTitle">—</h2></div><span class="status-pill" id="orderStatusPill">Memuat status…</span></div>
+        <p class="muted" id="orderCreatedAt"></p>
+        <div class="order-progress" id="orderProgress"></div>
+        <div class="order-items-list" id="orderItems"></div>
+        <div class="order-money-lines" id="orderMoneyLines"></div>
+        <p class="muted tiny" id="orderAddress"></p>
+        <div class="order-actions"><a class="button button-dark" id="orderWhatsapp" href="https://wa.me/6281221031765" target="_blank" rel="noopener">Konfirmasi via WhatsApp</a><button class="button button-outline" type="button" id="refreshOrder">Perbarui status</button></div>
+      </div>
+      <section class="payment-instruction-card" id="paymentInstructionCard" hidden>
+        <p class="eyebrow">INSTRUKSI PEMBAYARAN</p><h2 id="paymentTitle">Pembayaran manual</h2>
+        <div id="paymentAccountDetails"></div>
+        <div class="payment-deadline" id="paymentDeadline" hidden><span>Batas pembayaran</span><strong id="paymentCountdown">—</strong><small id="paymentDeadlineDate"></small></div>
+        <div class="payment-upload" id="paymentUploadBlock" hidden>
+          <h3>Unggah bukti pembayaran</h3><p class="muted">Format JPG, PNG, atau PDF. Ukuran maksimal 2 MB. Admin akan memeriksa bukti sebelum pesanan diproses.</p>
+          <form id="proofForm" class="form-stack"><label>Pilih bukti transfer *<input type="file" name="file" accept="image/jpeg,image/png,application/pdf,.jpg,.jpeg,.png,.pdf" required></label><button class="button button-orange full-width" type="submit">Kirim bukti pembayaran</button></form>
+        </div>
+        <p class="order-alert" id="proofMessage" role="status" aria-live="polite" hidden></p>
+      </section>
+    </section>
+    <p class="muted tiny order-help">Belum dapat menemukan pesanan? <a href="https://wa.me/6281221031765?text=Halo%20Sayur%20Pasundan%2C%20saya%20perlu%20bantuan%20pesanan." target="_blank" rel="noopener">Hubungi WhatsApp toko</a>.</p>
+  </main>
+  <footer class="site-footer"><div class="container detail-footer"><a class="footer-brand" href="/"><img class="footer-wordmark" src="/assets/images/brand/logo-sayur-pasundan.webp" alt="Logo Sayur Pasundan" width="190" height="115"><span class="brand-caption">Rencanakan Masakan Anda</span></a><span>© 2026 Sayur Pasundan</span></div></footer>
+</body>
+</html>
