@@ -169,4 +169,19 @@ if (last?.order_code && last?.customer_phone) {
   state.code = last.order_code; state.phone = last.customer_phone; state.whatsappUrl = last.whatsapp_url || "";
   const form = $("#trackForm"); if (form) { form.elements.order_code.value = state.code; form.elements.customer_phone.value = state.phone; }
   sessionStorage.removeItem("sp-last-order"); track();
+} else {
+  // Cadangan: buka dari ?kode=... memakai riwayat pesanan di perangkat ini
+  const wanted = (new URLSearchParams(location.search).get("kode") || "").trim().toUpperCase();
+  if (wanted) {
+    let history = [];
+    try { history = JSON.parse(localStorage.getItem(LOCAL_ORDER_HISTORY_KEY) || "[]"); } catch {}
+    const found = Array.isArray(history) ? history.find(item => String(item.order_code || "").toUpperCase() === wanted) : null;
+    const form = $("#trackForm");
+    if (form) form.elements.order_code.value = wanted;
+    if (found?.customer_phone) {
+      state.code = wanted; state.phone = found.customer_phone; state.whatsappUrl = found.whatsapp_url || "";
+      if (form) form.elements.customer_phone.value = state.phone;
+      track();
+    }
+  }
 }

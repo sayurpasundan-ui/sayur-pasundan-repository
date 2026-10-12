@@ -419,9 +419,6 @@ html, body {
   object-fit: contain;
 }
 
-.product-grid {
-  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
-}
 
 .product-content h3 {
   font-size: clamp(12px, 0.95vw, 15px);
@@ -439,10 +436,6 @@ html, body {
     max-height: 48px;
   }
 
-  .product-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 8px;
-  }
 
   .product-content {
     padding: 8px;
@@ -560,10 +553,6 @@ html, body {
 
 /* Tetap terbaca pada layar kecil */
 @media (max-width: 680px) {
-  .product-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 8px;
-  }
 
   .product-image-wrap {
     flex-basis: 100px;
@@ -742,10 +731,6 @@ html, body {
 
 /* Responsif untuk tampilan HP */
 @media (max-width: 680px) {
-  .product-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 8px;
-  }
 
   .product-content {
     padding: 8px;
@@ -1410,3 +1395,65 @@ html, body {
     max-width: none;
   }
 }
+
+/* === Rev23: grid responsif, kartu produk ringkas, navigasi bawah 4 menu === */
+.product-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:14px}
+@media (max-width:1100px){.product-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+@media (max-width:900px){.product-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px}}
+@media (max-width:680px){.product-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px}}
+
+.product-content{padding:12px}
+.product-content h3{font-size:14px;line-height:1.3;min-height:2.6em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:normal;word-break:normal}
+.product-content .product-description{font-size:11px!important;line-height:1.45!important;min-height:0!important;height:2.9em;margin-bottom:10px!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.product-content .field-label{font-size:11px}
+.product-content .select-field{font-size:12px;padding-left:8px;padding-right:22px;text-overflow:ellipsis}
+.product-content .price-row{flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;min-height:44px}
+.product-content .price-main{white-space:nowrap;overflow-wrap:normal;word-break:normal;font-size:15px}
+.product-content .price-unit{text-align:left;font-size:11px;line-height:1.3;overflow-wrap:normal;word-break:normal}
+.product-content .quantity-row .quantity-field{flex:0 0 58px;width:58px}
+.product-content .add-button{white-space:nowrap;font-size:12px;padding:0 6px;overflow:hidden;text-overflow:ellipsis}
+.product-content .product-detail-link{font-size:11px;white-space:nowrap}
+
+@media (max-width:680px){
+  /* deskripsi disembunyikan di HP agar kartu rapi */
+  .product-content .product-description{display:none!important}
+  .product-content{padding:9px}
+  .product-content h3{font-size:12.5px}
+  .product-content .field-label{font-size:10px}
+  .product-content .select-field{height:38px;flex-basis:38px;font-size:11.5px}
+  .product-content .price-main{font-size:14px}
+  .product-content .quantity-row .quantity-field{flex-basis:50px;width:50px}
+  .product-content .add-button{font-size:11.5px;padding:0 4px}
+}
+@media (max-width:360px){
+  .product-content .quantity-row{flex-direction:column;min-height:0;gap:6px}
+  .product-content .quantity-row .quantity-field{width:100%;flex:0 0 40px;height:40px;min-height:40px}
+  .product-content .add-button{flex:0 0 40px;height:40px;min-height:40px}
+}
+
+/* ikon SVG */
+.announcement-leaf svg{display:block}
+#getLocation{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+#getLocation svg{flex:none}
+.floating-whatsapp svg{flex:none}
+.floating-whatsapp span:first-child:not(:last-child){width:auto;height:auto;border:0;border-radius:0;font-size:inherit}
+
+/* navigasi bawah HP: Beranda, Kategori, Keranjang, Lacak Pesanan */
+@media (max-width:720px){
+  .mobile-nav{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+  .mobile-nav>a,.mobile-nav>button{min-width:0;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;background:none;color:#7d8b80;font-family:Poppins,Inter,sans-serif;font-weight:700;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent;padding:0}
+  .mobile-nav .nav-icon{display:block;width:22px;height:22px;flex:none}
+  .mobile-nav .nav-label{display:block;max-width:100%;font-size:10px!important;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mobile-nav .nav-icon-wrap{position:relative;display:block;line-height:0;font-size:0}
+  .mobile-nav .nav-icon-wrap b{position:absolute;top:-6px;right:-10px;display:grid;place-items:center;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:var(--orange);color:#263728;font-size:9px;line-height:1}
+  .mobile-nav .mobile-nav-active{color:var(--green)}
+  .floating-whatsapp{right:12px;bottom:calc(72px + env(safe-area-inset-bottom));padding:11px}
+  .floating-whatsapp span:last-child{display:none}
+}
+
+
+/* foto produk selalu selebar kartu */
+.product-image-link{display:block;width:100%}
+.product-image-wrap{width:100%;aspect-ratio:auto!important;height:170px;flex:0 0 auto}
+@media (max-width:900px){.product-image-wrap{height:150px}}
+@media (max-width:680px){.product-image-wrap{height:135px}}
