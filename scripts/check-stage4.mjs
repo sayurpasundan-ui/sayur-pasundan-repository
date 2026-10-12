@@ -29,7 +29,11 @@ const env = { SESSION_SECRET: "a-strong-random-test-secret-which-is-more-than-32
 const token = await createSession(env);
 const validRequest = new Request("https://shop.example/admin/", { headers: { Cookie: `sp_admin_session=${token}` } });
 assert.equal((await requireAdmin(validRequest, env)).ok, true);
-const tampered = token.slice(0, -1) + (token.endsWith("A") ? "B" : "A");
+const index = Math.floor(token.length / 2);
+const tampered =
+  token.slice(0, index) +
+  (token[index] === "A" ? "B" : "A") +
+  token.slice(index + 1);
 const invalidRequest = new Request("https://shop.example/admin/", { headers: { Cookie: `sp_admin_session=${tampered}` } });
 assert.equal((await requireAdmin(invalidRequest, env)).ok, false);
 assert.equal((await requireAdmin(validRequest, { SESSION_SECRET: "short" })).ok, false);
