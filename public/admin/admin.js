@@ -84,7 +84,28 @@ function openOrderEditor(order) {
   $("#formFields").innerHTML=`<div class="wide order-admin-details"><strong>Subtotal: ${rp(order.subtotal)}</strong><p>Ongkir: ${rp(order.shipping_fee)} · Total: <b>${rp(order.total)}</b></p><p>Metode: ${esc(order.payment_method_name||order.payment_method)} · Status pembayaran: <b>${esc(order.payment_status)}</b></p>${order.payment_due_at?`<p>Batas bayar: ${esc(new Date(order.payment_due_at).toLocaleString("id-ID"))}</p>`:""}<p>Kontak: ${esc(order.customer_phone)}</p><p>Alamat: ${esc(order.customer_address)}, ${esc([order.customer_district,order.customer_city,order.customer_province].filter(Boolean).join(", "))}</p>${map}<p>Catatan: ${esc(order.notes||"—")}</p><strong>Rincian barang</strong><ul>${items||"<li>Rincian tidak tersedia</li>"}</ul>${proof}</div><label for="field-status">Status pesanan<select id="field-status" name="status"><option value="pending" ${order.status==="pending"?"selected":""}>pending — menunggu pembayaran</option><option value="processed" ${order.status==="processed"?"selected":""}>processed — diproses</option><option value="delivering" ${order.status==="delivering"?"selected":""}>delivering — dikirim</option><option value="completed" ${order.status==="completed"?"selected":""}>completed — selesai</option><option value="cancelled" ${order.status==="cancelled"?"selected":""}>cancelled — batal</option></select></label><label for="field-payment_action">Tindakan pembayaran<select id="field-payment_action" name="payment_action"><option value="none">Tidak ada tindakan pembayaran</option>${actions.map(action=>`<option value="${action.value}">${action.label}</option>`).join("")}</select></label><label for="field-review_note" class="wide">Catatan penolakan bukti<textarea id="field-review_note" name="review_note" rows="2" maxlength="300" placeholder="Contoh: nominal transfer berbeda"></textarea></label>`;
   $("#formError").hidden=true;$("#recordDialog").showModal();
 }
-async function uploadResourceImage(file,scope="general") { if(!(file instanceof File)||!file.size)return null;const form=new FormData();form.set("file",file);form.set("product_id",scope);return await api("/api/admin/upload",{method:"POST",body:form}); }
+// Gambar dikecilkan otomatis di perangkat agar muat di penyimpanan D1 (maks 1,2 MB) dan cepat dimuat pelanggan.
+async function prepareImage(file,scope){
+  const target=900000,maxSide=String(scope).startsWith("banners")?1920:1200;
+  if(!/^image\/(jpeg|png|webp)$/.test(file.type))return file;
+  try{
+    const bitmap=await createImageBitmap(file);
+    if(file.size<=target&&Math.max(bitmap.width,bitmap.height)<=maxSide)return file;
+    let scale=Math.min(1,maxSide/Math.max(bitmap.width,bitmap.height));
+    const base=String(file.name||"gambar").replace(/\.[^.]+$/,"")||"gambar";
+    for(let i=0;i<6;i++){
+      const cv=document.createElement("canvas");cv.width=Math.max(1,Math.round(bitmap.width*scale));cv.height=Math.max(1,Math.round(bitmap.height*scale));
+      cv.getContext("2d").drawImage(bitmap,0,0,cv.width,cv.height);
+      const quality=Math.max(0.5,0.85-i*0.07);
+      let blob=await new Promise(r=>cv.toBlob(r,"image/webp",quality));
+      if(!blob||blob.type!=="image/webp")blob=await new Promise(r=>cv.toBlob(r,"image/jpeg",quality));
+      if(blob&&blob.size<=target)return new File([blob],base+(blob.type==="image/webp"?".webp":".jpg"),{type:blob.type});
+      scale*=0.8;
+    }
+  }catch{/* pakai file asli bila browser tidak mendukung */}
+  return file;
+}
+async function uploadResourceImage(file,scope="general") { if(!(file instanceof File)||!file.size)return null;const prepared=await prepareImage(file,scope);const form=new FormData();form.set("file",prepared,prepared.name);form.set("product_id",scope);return await api("/api/admin/upload",{method:"POST",body:form}); }
 async function saveRecord(event) {
   event.preventDefault();const form=event.currentTarget,data=new FormData(form),err=$("#formError");err.hidden=true;
   try {
