@@ -6,8 +6,8 @@ export async function onRequestGet({ request, env }) {
   if (!auth.ok) return auth.response;
   const readiness = {
     database: Boolean(env?.DB),
-    productImages: Boolean(env?.PRODUCT_IMAGES),
-    paymentProofs: Boolean(env?.PAYMENT_PROOFS),
+    productImages: Boolean(env?.PRODUCT_IMAGES || env?.DB),
+    paymentProofs: Boolean(env?.PAYMENT_PROOFS || env?.DB),
     migrations: false,
     storeSettings: false,
     banners: false,
