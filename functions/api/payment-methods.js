@@ -10,7 +10,7 @@ export async function onRequestGet({ env }) {
       readStoreSettings(db, env)
     ]);
     return json((rows.results || []).map(item => ({ ...item,
-      allowed_cod_districts: item.kind === "cod" ? settings.codAllowedDistricts : [],
+      allowed_cod_districts: [],
       available: item.kind !== "cod" || settings.codEnabled,
       unavailable_reason: item.kind === "cod" && !settings.codEnabled ? "COD dinonaktifkan oleh toko." : null
     })));

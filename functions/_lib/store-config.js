@@ -60,7 +60,7 @@ export async function readStoreSettings(db, env = {}) {
     codAllowedDistricts: String(values.cod_allowed_districts || "").split(",").map(normalizePlace).filter(Boolean),
     codAllowedCity: values.cod_allowed_city,
     codAllowedProvince: values.cod_allowed_province,
-    codEnabled: values.cod_enabled !== "0" && String(values.cod_allowed_districts || "").trim().length > 0
+    codEnabled: values.cod_enabled !== "0"
   };
 }
 
@@ -70,6 +70,23 @@ export async function getRawStoreSettings(db, env = {}) {
 
 export function codDistrictsMatch(settings, district) {
   return settings.codAllowedDistricts.includes(normalizePlace(district));
+}
+
+export function codOrderError(settings, { district, city, province, hasCoordinates, total } = {}) {
+  if (!codDistrictsMatch(settings, district)) {
+    return "COD hanya tersedia di kecamatan Paseh, Majalaya, Solokan Jeruk, dan Ciparay.";
+  }
+  if (normalizePlace(city) !== normalizePlace(settings.codAllowedCity)) {
+    return `COD hanya tersedia di ${settings.codAllowedCity}.`;
+  }
+  if (normalizePlace(province) !== normalizePlace(settings.codAllowedProvince)) {
+    return `COD hanya tersedia di Provinsi ${settings.codAllowedProvince}.`;
+  }
+  if (!hasCoordinates) return "Lokasi pengantaran diperlukan untuk pesanan COD.";
+  if (Number.isFinite(Number(total)) && Number(total) > settings.codMaxOrderTotal) {
+    return `COD hanya tersedia untuk total pesanan maksimal Rp${settings.codMaxOrderTotal.toLocaleString("id-ID")}, termasuk ongkir.`;
+  }
+  return null;
 }
 
 export function allowedCodDistrictsFrom(settings) {

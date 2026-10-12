@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import assert from "node:assert/strict";
 import { shippingQuote, haversineKm, normalizePhone, validCoordinatePair, displayOrderStatus } from "../functions/_lib/order-utils.js";
+import { codOrderError, readStoreSettings } from "../functions/_lib/store-config.js";
 
 const root = process.cwd();
 const read = p => fs.readFile(path.join(root, p), "utf8");
@@ -16,6 +17,13 @@ assert.equal(validCoordinatePair(-7.05, 107.76), true);
 assert.equal(displayOrderStatus({status:"pending",payment_status:"awaiting_payment"}), "Menunggu Pembayaran");
 assert.equal(displayOrderStatus({status:"pending",payment_status:"awaiting_verification"}), "Menunggu Verifikasi Pembayaran");
 assert.equal(displayOrderStatus({status:"delivering",payment_method:"cod",payment_status:"cod_unpaid"}), "Sedang Dikirim · Pembayaran saat tiba");
+const codSettings = await readStoreSettings(null, {});
+assert.equal(codOrderError(codSettings, {district:"  solokan   jeruk ",city:"KABUPATEN BANDUNG",province:"jawa barat",hasCoordinates:true,total:200000}), null, "Total COD tepat pada batas tetap diizinkan");
+assert.match(codOrderError(codSettings, {district:"Rancaekek",city:"Kabupaten Bandung",province:"Jawa Barat",hasCoordinates:true,total:50000}), /Paseh, Majalaya, Solokan Jeruk, dan Ciparay/);
+assert.match(codOrderError(codSettings, {district:"Paseh",city:"Kota Bandung",province:"Jawa Barat",hasCoordinates:true,total:50000}), /COD hanya tersedia di Kabupaten Bandung/);
+assert.match(codOrderError(codSettings, {district:"Paseh",city:"Kabupaten Bandung",province:"Banten",hasCoordinates:true,total:50000}), /COD hanya tersedia di Provinsi Jawa Barat/);
+assert.match(codOrderError(codSettings, {district:"Paseh",city:"Kabupaten Bandung",province:"Jawa Barat",hasCoordinates:false,total:50000}), /Lokasi pengantaran diperlukan/);
+assert.match(codOrderError(codSettings, {district:"Paseh",city:"Kabupaten Bandung",province:"Jawa Barat",hasCoordinates:true,total:200001}), /termasuk ongkir/);
 
 const migration = await read("migrations/0002_checkout_payments.sql");
 const migration3 = await read("migrations/0003_confirmed_payment_and_cod_areas.sql");
@@ -37,9 +45,9 @@ assert.match(migration, /INSERT OR IGNORE INTO payment_methods[\s\S]*'bca'[\s\S]
 assert.match(migration3, /UPDATE payment_methods[\s\S]*account_name = 'Devi Triani Maresa'[\s\S]*WHERE code = 'dana'/);
 assert.match(wrangler, /Paseh,Majalaya,Solokan Jeruk,Ciparay/);
 assert.match(storeConfig, /cod_max_order_total/);
-assert.match(createOrder, /settings\.codMaxOrderTotal/);
-assert.match(createOrder, /COD hanya tersedia di Kabupaten Bandung/);
-assert.match(createOrder, /COD hanya tersedia di Provinsi Jawa Barat/);
+assert.match(createOrder, /codOrderError\(settings/);
+assert.match(storeConfig, /settings\.codMaxOrderTotal/);
+assert.match(createOrder, /cod_max_order_total:\s*settings\.codMaxOrderTotal/);
 assert.match(createOrder, /shippingQuote\(subtotal, distanceKm, settings\)/);
 assert.match(createOrder, /payment_refs/);
 assert.match(trackApi, /normalizePhone/);

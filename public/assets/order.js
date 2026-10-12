@@ -116,6 +116,48 @@ async function uploadProof(event) {
   finally { button.disabled = false; button.textContent = "Kirim bukti pembayaran"; }
 }
 
+const LOCAL_ORDER_HISTORY_KEY = "sp-order-history-v1";
+function renderLocalOrderHistory() {
+  const target = $("#localOrderHistoryList");
+  if (!target) return;
+  let history = [];
+  try {
+    const parsed = JSON.parse(localStorage.getItem(LOCAL_ORDER_HISTORY_KEY) || "[]");
+    history = Array.isArray(parsed) ? parsed : [];
+  } catch {}
+  if (!history.length) {
+    target.innerHTML = '<p class="muted">Belum ada riwayat pesanan lokal di browser ini.</p>';
+    return;
+  }
+  target.innerHTML = history.map((item, index) => `
+    <div class="order-item-row">
+      <span>
+        <strong>${esc(item.order_code || "Pesanan")}</strong>
+        <small>${esc(item.created_at ? new Date(item.created_at).toLocaleString("id-ID") : "Tanggal tidak tersedia")}</small>
+        <small>${esc(item.items?.length || 0)} jenis barang · ${rupiah(item.total_estimate || 0)}</small>
+      </span>
+      <button class="button button-outline" type="button" data-local-order-index="${index}">Lacak</button>
+    </div>`).join("");
+  target.querySelectorAll("[data-local-order-index]").forEach(button => {
+    button.addEventListener("click", async () => {
+      const item = history[Number(button.dataset.localOrderIndex)];
+      if (!item?.order_code || !item?.customer_phone) {
+        message("Data pelacakan pesanan ini tidak lengkap. Masukkan kode dan nomor WhatsApp secara manual.", true);
+        $("#trackForm")?.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+      const form = $("#trackForm");
+      form.elements.order_code.value = item.order_code;
+      form.elements.customer_phone.value = item.customer_phone;
+      state.code = item.order_code;
+      state.phone = item.customer_phone;
+      state.whatsappUrl = item.whatsapp_url || "";
+      await track(state.code, state.phone);
+      $("#orderResult")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+}
+renderLocalOrderHistory();
 $("#trackForm")?.addEventListener("submit", async event => {
   event.preventDefault(); const fd = new FormData(event.currentTarget);
   state.code = String(fd.get("order_code") || "").trim().toUpperCase(); state.phone = String(fd.get("customer_phone") || "").trim(); state.whatsappUrl = "";

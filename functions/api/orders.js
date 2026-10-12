@@ -1,6 +1,6 @@
 import { json, readJson, requireDb, safeText, numberOr, sameOrigin } from "../_lib/http.js";
-import { allowedCodDistricts, coordinatesFromGoogleMapsUrl, haversineKm, money, normalizeGoogleMapsUrl, normalizePhone, normalizePlace, shippingQuote, validCoordinatePair, expireOverdueOrders } from "../_lib/order-utils.js";
-import { readStoreSettings } from "../_lib/store-config.js";
+import { coordinatesFromGoogleMapsUrl, haversineKm, money, normalizeGoogleMapsUrl, normalizePhone, shippingQuote, validCoordinatePair, expireOverdueOrders } from "../_lib/order-utils.js";
+import { codOrderError, readStoreSettings } from "../_lib/store-config.js";
 
 function orderCode() { return `SP-${Date.now().toString(36).toUpperCase()}-${crypto.randomUUID().replaceAll("-", "").slice(0, 12).toUpperCase()}`; }
 function code3() { const n = new Uint32Array(1); crypto.getRandomValues(n); return (n[0] % 999) + 1; }
@@ -30,19 +30,8 @@ export async function onRequestPost({ request, env }) {
   const paymentMethod = await db.prepare(`SELECT * FROM payment_methods WHERE code=? AND is_active=1`).bind(methodCode).first();
   if (!paymentMethod) return json({ error: "Metode pembayaran tidak tersedia. Muat ulang halaman dan pilih metode lain." }, 400);
 
-  const districts = allowedCodDistricts(env, settings);
   const isCod = paymentMethod.kind === "cod" || methodCode === "cod";
-  if (isCod && (!settings.codEnabled || !districts.length)) return json({ error: "COD belum diaktifkan. Toko perlu mengatur daftar kecamatan COD terlebih dahulu." }, 409);
-  const district = normalizePlace(body.customer_district);
-  if (isCod && !districts.includes(district)) return json({ error: "COD hanya tersedia untuk Kecamatan Paseh, Majalaya, Solokan Jeruk, dan Ciparay." }, 400);
-  const city = normalizePlace(body.customer_city);
-  const province = normalizePlace(body.customer_province);
-  const allowedCity = normalizePlace(settings.codAllowedCity || "Kabupaten Bandung");
-  const allowedProvince = normalizePlace(settings.codAllowedProvince || "Jawa Barat");
-  if (isCod && ![allowedCity, "kab. bandung", "kab bandung"].includes(city)) {
-    return json({ error: "COD hanya tersedia di Kabupaten Bandung. Periksa kembali kolom kota/kabupaten." }, 400);
-  }
-  if (isCod && province !== allowedProvince) return json({ error: "COD hanya tersedia di Provinsi Jawa Barat." }, 400);
+  if (isCod && !settings.codEnabled) return json({ error: "COD sedang dinonaktifkan oleh toko." }, 409);
 
   let subtotal = 0;
   const items = [];
@@ -81,9 +70,17 @@ export async function onRequestPost({ request, env }) {
   try { shipping = shippingQuote(subtotal, distanceKm, settings); }
   catch (error) { return json({ error: error.message }, 400); }
   const total = money(subtotal + shipping.shipping_fee);
-  const codMax = settings.codMaxOrderTotal;
-  if (isCod && total > codMax) return json({ error: `COD hanya tersedia untuk total pesanan sampai Rp${codMax.toLocaleString("id-ID")}, termasuk ongkir.` }, 400);
-  if (isCod && distanceKm == null) return json({ error: "Aktifkan lokasi untuk menghitung jarak pengantaran sebelum memilih COD." }, 400);
+  if (isCod) {
+    const codError = codOrderError(settings, {
+      district: body.customer_district,
+      city: body.customer_city,
+      province: body.customer_province,
+      hasCoordinates: Boolean(deliveryCoordinates),
+      total
+    });
+    if (codError) return json({ error: codError }, 400);
+  }
+
   if (paymentMethod.kind !== "bank_transfer" && paymentMethod.kind !== "e_wallet" && !isCod) return json({ error: "Jenis metode pembayaran tidak dikenali." }, 400);
   if (!isCod && paymentMethod.kind !== "bank_transfer" && paymentMethod.kind !== "e_wallet") return json({ error: "Metode pembayaran ini belum mendukung transfer manual." }, 400);
 
@@ -139,5 +136,5 @@ export async function onRequestPost({ request, env }) {
     payment_method_code: methodCode, payment_status: initialPaymentStatus, payment_unique_code: chosenCode ? String(chosenCode).padStart(3, "0") : null,
     payment_amount: paymentAmount, payment_due_at: due, account_number: paymentMethod.account_number,
     account_name: paymentMethod.account_name, payment_instructions: paymentMethod.instructions,
-    cod_max_order_total: codMax, whatsapp_url: `https://wa.me/${storePhone}?text=${encodeURIComponent(message)}` });
+    cod_max_order_total: settings.codMaxOrderTotal, whatsapp_url: `https://wa.me/${storePhone}?text=${encodeURIComponent(message)}` });
 }
