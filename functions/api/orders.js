@@ -1,11 +1,12 @@
 import { json, readJson, requireDb, safeText, numberOr, sameOrigin } from "../_lib/http.js";
 import { coordinatesFromGoogleMapsUrl, haversineKm, money, normalizeGoogleMapsUrl, normalizePhone, shippingQuote, validCoordinatePair, expireOverdueOrders } from "../_lib/order-utils.js";
 import { codOrderError, readStoreSettings } from "../_lib/store-config.js";
+import { emit } from "../_lib/notify.js";
 
 function orderCode() { return `SP-${Date.now().toString(36).toUpperCase()}-${crypto.randomUUID().replaceAll("-", "").slice(0, 12).toUpperCase()}`; }
 function code3() { const n = new Uint32Array(1); crypto.getRandomValues(n); return (n[0] % 999) + 1; }
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost({ request, env, waitUntil }) {
   if (!sameOrigin(request)) return json({ error: "Origin tidak diizinkan." }, 403);
   if (!env?.DB) return json({ error: "Database belum tersambung." }, 503);
   const body = await readJson(request);
@@ -18,7 +19,7 @@ export async function onRequestPost({ request, env }) {
   const db = requireDb(env);
   let settings;
   try { settings = await readStoreSettings(db, env); } catch { settings = await readStoreSettings(null, env); }
-  try { await expireOverdueOrders(db); } catch { /* sweeper terjadwal menjadi sumber utama; lanjutkan order baru */ }
+  try { await expireOverdueOrders(db, { env, waitUntil }); } catch { /* sweeper terjadwal menjadi sumber utama; lanjutkan order baru */ }
 
   const mapUrl = normalizeGoogleMapsUrl(body.customer_map_url);
   if (body.customer_map_url && !mapUrl) return json({ error: "Tautan lokasi harus berupa tautan Google Maps yang valid." }, 400);
@@ -123,6 +124,7 @@ export async function onRequestPost({ request, env }) {
   }
   if (!created) { console.error("[orders] Gagal menyimpan pesanan", lastError); return json({ error: "Pesanan belum berhasil disimpan. Silakan coba kembali." }, 500); }
 
+  emit({ env, waitUntil }, { type: "order_created", order: { order_code: code, customer_name: customer.name, total, payment_amount: paymentAmount, payment_method: isCod ? "cod" : paymentMethod.name } });
   const paymentMessage = isCod ? "Pembayaran dilakukan saat barang diterima." : `Transfer ${paymentMethod.name} sebesar Rp${paymentAmount.toLocaleString("id-ID")} sebelum ${due}.`;
   let message = `Halo Sayur Pasundan, saya ingin mengonfirmasi pesanan.\n\nKode: ${code}\nNama: ${customer.name}\nNo. WhatsApp: ${customer.phone}\nAlamat: ${customer.address}, ${customer.district}, ${customer.city}, ${customer.province}${customer.mapUrl ? `\nGoogle Maps: ${customer.mapUrl}` : ""}\n\nDetail pesanan:\n`;
   for (const item of items) message += `• ${item.product_name}${item.variant_label ? ` (${item.variant_label})` : ""} — ${item.quantity} × ${item.unit_label} = Rp${item.line_total.toLocaleString("id-ID")}\n`;
