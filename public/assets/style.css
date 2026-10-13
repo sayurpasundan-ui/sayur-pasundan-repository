@@ -1460,3 +1460,20 @@ html, body {
 
 /* Form checkout & akun harus tampil di atas keranjang (z-index 51) */
 #checkoutBackdrop,#accountBackdrop{z-index:70}
+
+/* Riwayat status & notifikasi pesanan */
+.order-history{margin-top:18px}
+.order-history h3{margin:0 0 10px;font-size:15px}
+.history-list{list-style:none;margin:0;padding:0;position:relative}
+.history-list li{position:relative;display:flex;gap:12px;padding:0 0 14px 0}
+.history-list li::before{content:"";position:absolute;left:6px;top:14px;bottom:-2px;width:2px;background:#dbe6d5}
+.history-list li:last-child::before{display:none}
+.history-dot{flex:none;width:14px;height:14px;margin-top:3px;border-radius:50%;background:#c9d8c2;border:2px solid #fff;box-shadow:0 0 0 1px #c9d8c2;position:relative;z-index:1}
+.history-list .is-latest .history-dot{background:#2f7a3d;box-shadow:0 0 0 1px #2f7a3d}
+.history-list strong{display:block;font-size:14px;color:#1d2d20}
+.history-list small{display:block;margin-top:2px;color:#6a7a6c;font-size:12px}
+.history-list p{margin:4px 0 0;font-size:12.5px;color:#7a3b1d}
+.push-box{margin-top:14px}
+.push-box .push-on{margin:0;padding:10px 12px;border-radius:12px;background:#eef6e8;color:#2d5a34;font-size:13px;font-weight:600}
+.push-box .muted{margin:8px 0 0}
+

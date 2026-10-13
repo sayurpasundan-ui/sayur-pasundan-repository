@@ -74,6 +74,37 @@ function renderPayment(order) {
     tick(); tickTimer = setInterval(tick, 1000);
   }
 }
+const PUSH_ORDERS_KEY = "sp-push-orders-v1";
+function pushOrders() { try { const v = JSON.parse(localStorage.getItem(PUSH_ORDERS_KEY) || "[]"); return Array.isArray(v) ? v : []; } catch { return []; } }
+function rememberPushOrder(code) { try { localStorage.setItem(PUSH_ORDERS_KEY, JSON.stringify([...new Set([...pushOrders(), code])].slice(-30))); } catch {} }
+function formatTime(value) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : date.toLocaleString("id-ID", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+}
+function renderHistory(order) {
+  const box = $("#orderHistory"); if (!box) return;
+  const items = Array.isArray(order.history) ? order.history : [];
+  if (!items.length) { box.innerHTML = ""; return; }
+  box.innerHTML = `<h3>Riwayat status</h3><ol class="history-list">${items.slice().reverse().map((entry, index) =>
+    `<li class="${index === 0 ? "is-latest" : ""}"><span class="history-dot" aria-hidden="true"></span><div><strong>${esc(entry.label)}</strong><small>${esc(formatTime(entry.at))}</small>${entry.note ? `<p>Catatan toko: ${esc(entry.note)}</p>` : ""}</div></li>`).join("")}</ol>`;
+}
+async function renderPushBox(order) {
+  const box = $("#pushBox"); if (!box) return;
+  const finished = order.status === "completed" || order.status === "cancelled" || order.payment_status === "expired";
+  if (finished || !window.SPPush || !SPPush.supported()) { box.hidden = true; return; }
+  box.hidden = false;
+  const active = SPPush.permission() === "granted" && pushOrders().includes(order.order_code) && Boolean(await SPPush.currentSub());
+  if (active) { box.innerHTML = `<p class="push-on">Notifikasi aktif di HP ini. Anda akan diberi tahu saat status pesanan berubah.</p>`; return; }
+  if (SPPush.permission() === "denied") { box.innerHTML = `<p class="muted">Notifikasi diblokir di browser ini. Aktifkan lewat pengaturan situs bila ingin menerima kabar status pesanan.</p>`; return; }
+  box.innerHTML = `<button type="button" class="button button-outline" id="enablePush">Aktifkan notifikasi status pesanan</button><p class="muted tiny" id="pushMessage" hidden></p>`;
+  $("#enablePush").addEventListener("click", async event => {
+    const button = event.currentTarget, note = $("#pushMessage"); button.disabled = true; note.hidden = true;
+    try {
+      await SPPush.enable("/api/push/subscribe", { role: "customer", order_code: order.order_code, customer_phone: state.phone });
+      rememberPushOrder(order.order_code); renderPushBox(order);
+    } catch (error) { note.textContent = error.message || "Notifikasi belum dapat diaktifkan."; note.hidden = false; button.disabled = false; }
+  });
+}
 function renderOrder(order) {
   activeOrder = order; $("#orderResult").hidden = false;
   $("#orderCodeTitle").textContent = order.order_code;
@@ -81,6 +112,7 @@ function renderOrder(order) {
   $("#orderStatusPill").classList.toggle("is-cancelled", order.status === "cancelled" || order.payment_status === "expired");
   $("#orderCreatedAt").textContent = `Dibuat ${new Date(order.created_at).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" })}`;
   $("#orderProgress").innerHTML = statusSteps(order);
+  renderHistory(order); renderPushBox(order);
   renderItems(order); renderMoney(order);
   $("#orderAddress").textContent = `Alamat pengantaran: ${order.customer_address}, ${order.customer_district}, ${order.customer_city}${order.customer_province ? `, ${order.customer_province}` : ""}${order.distance_km != null ? ` · jarak estimasi ${Number(order.distance_km).toFixed(2).replace(".",",")} km` : ""}`;
   const mapLink = $("#orderMapLink");
