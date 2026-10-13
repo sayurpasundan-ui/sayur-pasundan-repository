@@ -1457,3 +1457,6 @@ html, body {
 .product-image-wrap{width:100%;aspect-ratio:auto!important;height:170px;flex:0 0 auto}
 @media (max-width:900px){.product-image-wrap{height:150px}}
 @media (max-width:680px){.product-image-wrap{height:135px}}
+
+/* Form checkout & akun harus tampil di atas keranjang (z-index 51) */
+#checkoutBackdrop,#accountBackdrop{z-index:70}

@@ -104,11 +104,41 @@ async function track(code = state.code, phone = state.phone) {
     renderOrder(data.order); message("");
   } catch (error) { $("#orderResult").hidden = true; message(error.message || "Pesanan tidak dapat ditemukan.", true); }
 }
+const PROOF_MAX_BYTES = 1200000;
+// Foto bukti transfer dikecilkan otomatis di perangkat (JPEG, sisi terpanjang 1600 px) agar cepat terunggah.
+async function shrinkImage(file, targetBytes = 900000) {
+  if (!/^image\/(jpeg|png)$/.test(file.type)) return file;
+  if (file.type === "image/jpeg" && file.size <= targetBytes) return file;
+  try {
+    const bitmap = await createImageBitmap(file);
+    let scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+    const baseName = String(file.name || "bukti").replace(/\.[^.]+$/, "") || "bukti";
+    for (let attempt = 0; attempt < 6; attempt++) {
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", Math.max(0.5, 0.82 - attempt * 0.07)));
+      if (blob && blob.size <= targetBytes) return new File([blob], baseName + ".jpg", { type: "image/jpeg" });
+      scale *= 0.8;
+    }
+  } catch { /* gunakan file asli bila browser tidak mendukung */ }
+  return file;
+}
 async function uploadProof(event) {
   event.preventDefault(); if (!activeOrder || !state.code || !state.phone) return;
   const form = new FormData(event.currentTarget); form.set("customer_phone", state.phone);
-  const button = $("button[type='submit']", event.currentTarget); button.disabled = true; button.textContent = "Mengunggah…";
+  const button = $("button[type='submit']", event.currentTarget); button.disabled = true; button.textContent = "Memproses foto…";
   try {
+    const original = form.get("file");
+    if (original && original.size) {
+      const prepared = await shrinkImage(original);
+      if (prepared.size > PROOF_MAX_BYTES) throw new Error("Ukuran file terlalu besar (maksimal 1,2 MB). Gunakan foto/tangkapan layar atau PDF yang lebih kecil.");
+      form.set("file", prepared, prepared.name);
+    }
+    button.textContent = "Mengunggah…";
     await api(`/api/orders/${encodeURIComponent(state.code)}/proof`, { method: "POST", body: form });
     message("Bukti berhasil diunggah. Pesanan menunggu verifikasi admin.", false, "#proofMessage");
     await track(state.code, state.phone);
