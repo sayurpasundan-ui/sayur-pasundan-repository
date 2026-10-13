@@ -6,6 +6,7 @@
   <meta name="description" content="Konfirmasi pembayaran dan lacak pesanan Sayur Pasundan.">
   <title>Pesanan Saya — Sayur Pasundan</title>
   <link rel="icon" href="/icon-192.png" type="image/png"><link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/push.js" defer></script>
   <script src="/assets/order.js" defer></script>
 </head>
 <body class="info-page order-page">
@@ -33,6 +34,8 @@
         <div class="order-summary-heading"><div><p class="eyebrow">KODE PESANAN</p><h2 id="orderCodeTitle">—</h2></div><span class="status-pill" id="orderStatusPill">Memuat status…</span></div>
         <p class="muted" id="orderCreatedAt"></p>
         <div class="order-progress" id="orderProgress"></div>
+        <div class="push-box" id="pushBox" hidden></div>
+        <div class="order-history" id="orderHistory"></div>
         <div class="order-items-list" id="orderItems"></div>
         <div class="order-money-lines" id="orderMoneyLines"></div>
         <p class="muted tiny" id="orderAddress"></p>

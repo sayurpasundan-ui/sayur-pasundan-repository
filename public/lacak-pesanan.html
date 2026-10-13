@@ -6,6 +6,7 @@
   <meta name="description" content="Lacak status pesanan Sayur Pasundan tanpa perlu akun pembeli.">
   <title>Lacak Pesanan — Sayur Pasundan</title>
   <link rel="icon" href="/icon-192.png" type="image/png"><link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/push.js" defer></script>
   <script src="/assets/order.js" defer></script>
 </head>
 <body class="info-page order-page">
@@ -18,7 +19,9 @@
       <p class="order-alert" id="orderMessage" role="status" aria-live="polite" hidden></p>
     </section>
     <section class="order-result" id="orderResult" hidden>
-      <div class="order-summary-card"><div class="order-summary-heading"><div><p class="eyebrow">KODE PESANAN</p><h2 id="orderCodeTitle">—</h2></div><span class="status-pill" id="orderStatusPill">Memuat status…</span></div><p class="muted" id="orderCreatedAt"></p><div class="order-progress" id="orderProgress"></div><div class="order-items-list" id="orderItems"></div><div class="order-money-lines" id="orderMoneyLines"></div><p class="muted tiny" id="orderAddress"></p>
+      <div class="order-summary-card"><div class="order-summary-heading"><div><p class="eyebrow">KODE PESANAN</p><h2 id="orderCodeTitle">—</h2></div><span class="status-pill" id="orderStatusPill">Memuat status…</span></div><p class="muted" id="orderCreatedAt"></p><div class="order-progress" id="orderProgress"></div>
+        <div class="push-box" id="pushBox" hidden></div>
+        <div class="order-history" id="orderHistory"></div><div class="order-items-list" id="orderItems"></div><div class="order-money-lines" id="orderMoneyLines"></div><p class="muted tiny" id="orderAddress"></p>
           <a id="orderMapLink" class="text-link" href="#" target="_blank" rel="noopener noreferrer" hidden>Buka lokasi di Google Maps ↗</a><div class="order-actions"><a class="button button-dark" id="orderWhatsapp" href="https://wa.me/6281221031765" target="_blank" rel="noopener">Konfirmasi via WhatsApp</a><button class="button button-outline" type="button" id="refreshOrder">Perbarui status</button></div></div>
       <section class="payment-instruction-card" id="paymentInstructionCard" hidden><p class="eyebrow">INSTRUKSI PEMBAYARAN</p><h2 id="paymentTitle">Pembayaran manual</h2><div id="paymentAccountDetails"></div><div class="payment-deadline" id="paymentDeadline" hidden><span>Batas pembayaran</span><strong id="paymentCountdown">—</strong><small id="paymentDeadlineDate"></small></div><div class="payment-upload" id="paymentUploadBlock" hidden><h3>Unggah bukti pembayaran</h3><p class="muted">Format JPG, PNG, atau PDF. Ukuran maksimal 2 MB.</p><form id="proofForm" class="form-stack"><label>Pilih bukti transfer *<input type="file" name="file" accept="image/jpeg,image/png,application/pdf,.jpg,.jpeg,.png,.pdf" required></label><button class="button button-orange full-width" type="submit">Kirim bukti pembayaran</button></form></div><p class="order-alert" id="proofMessage" role="status" aria-live="polite" hidden></p></section>
     </section>
