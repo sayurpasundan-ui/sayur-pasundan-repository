@@ -24,3 +24,12 @@
   .admin-table td.admin-empty{display:block;text-align:center}
 }
 
+/* Kartu notifikasi admin */
+.notify-card{margin:0 0 18px;padding:16px 18px;background:#fff;border:1px solid var(--admin-line,#dfe8d8);border-radius:16px;box-shadow:0 9px 25px #244b2508}
+.notify-card h3{margin:0 0 10px;font-size:16px}
+.notify-channels{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:8px}
+.notify-channels li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:#f6f8f2;font-size:14px}
+.notify-channels li b{font-size:12px;padding:4px 10px;border-radius:999px;background:#e8ecdf;color:#5d6b5f}
+.notify-channels li.on b{background:#dff0d8;color:#2a6b34}
+.notify-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+

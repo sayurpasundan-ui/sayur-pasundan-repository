@@ -6,6 +6,7 @@
   <title>Admin — Sayur Pasundan</title>
   <link rel="icon" href="/icon-192.png" type="image/png">
   <link rel="stylesheet" href="/assets/style.css"><link rel="stylesheet" href="/admin/admin.css">
+  <script src="/assets/push.js" defer></script>
   <script src="/admin/admin.js" defer></script>
 </head>
 <body class="admin-body">
@@ -18,6 +19,7 @@
     <section id="adminPanel" hidden>
       <div class="admin-title"><div><p class="eyebrow">PENGELOLAAN TOKO</p><h1>Dashboard Admin</h1><p class="muted">Kelola bisnis dari satu panel. Perubahan disimpan ke database D1.</p></div><div class="admin-title-actions"><a href="/" class="button button-outline">Lihat toko</a><button class="button button-dark" id="logoutButton" type="button">Keluar</button></div></div>
       <div class="admin-notice" id="adminNotice" role="status" hidden></div>
+      <section class="notify-card" id="notifyCard" hidden><div class="card-heading"><div><p class="eyebrow">NOTIFIKASI</p><h3>Kabar pesanan masuk</h3></div></div><div id="notifyBody"></div></section>
       <nav class="admin-tabs" aria-label="Menu admin">
         <button type="button" class="selected" data-tab="dashboard">Ringkasan</button><button type="button" data-tab="orders">Pesanan</button><button type="button" data-tab="products">Produk</button><button type="button" data-tab="categories">Kategori</button><button type="button" data-tab="variants">Varian</button><button type="button" data-tab="units">Satuan & Harga</button><button type="button" data-tab="photos">Foto Produk</button><button type="button" data-tab="banners">Banner</button><button type="button" data-tab="promotions">Promo</button><button type="button" data-tab="paymentMethods">Pembayaran</button><button type="button" data-tab="settings">Pengaturan Toko</button>
       </nav>
