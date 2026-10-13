@@ -1,5 +1,6 @@
 import { json, requireDb, sameOrigin } from "../../../_lib/http.js";
 import { expireOverdueOrders, normalizePhone } from "../../../_lib/order-utils.js";
+import { emit } from "../../../_lib/notify.js";
 import { D1_KEY_PREFIX, D1_MAX_BYTES, R2_MAX_BYTES, bytesToBase64, ensureProofTable, proofStorageMode } from "../../../_lib/proof-storage.js";
 
 const MIME_EXT = { "image/jpeg": "jpg", "image/png": "png", "application/pdf": "pdf" };
@@ -10,7 +11,7 @@ function validMagic(type, bytes) {
   return false;
 }
 
-export async function onRequestPost({ request, env, params }) {
+export async function onRequestPost({ request, env, params, waitUntil }) {
   if (!sameOrigin(request)) return json({ error: "Origin tidak diizinkan." }, 403);
   if (!env?.DB) return json({ error: "Database belum tersambung." }, 503);
   const mode = proofStorageMode(env), MAX_BYTES = mode === "r2" ? R2_MAX_BYTES : D1_MAX_BYTES;
@@ -28,8 +29,8 @@ export async function onRequestPost({ request, env, params }) {
 
   const db = requireDb(env), code = String(params.code || "").toUpperCase();
   try {
-    await expireOverdueOrders(db);
-    const order = await db.prepare(`SELECT id,order_code,customer_phone,payment_method,payment_status,payment_due_at,status FROM orders WHERE order_code=?`).bind(code).first();
+    await expireOverdueOrders(db, { env, waitUntil });
+    const order = await db.prepare(`SELECT id,order_code,customer_name,customer_phone,total,payment_amount,payment_method,payment_status,payment_due_at,status FROM orders WHERE order_code=?`).bind(code).first();
     if (!order || normalizePhone(order.customer_phone) !== phone) return json({ error: "Pesanan tidak ditemukan. Periksa kode dan nomor WhatsApp." }, 404);
     if (order.payment_method === "cod") return json({ error: "Pesanan COD tidak membutuhkan bukti transfer." }, 400);
     if (order.payment_status === "expired" || order.status === "cancelled" || (order.payment_due_at && Date.parse(order.payment_due_at) <= Date.now())) return json({ error: "Batas pembayaran sudah terlewati. Pesanan tidak dapat menerima bukti baru." }, 410);
@@ -60,6 +61,7 @@ export async function onRequestPost({ request, env, params }) {
         ...statements(objectKey)
       ]);
     }
+    emit({ env, waitUntil }, { type: "proof_uploaded", order });
     return json({ ok: true, message: "Bukti berhasil diunggah dan menunggu verifikasi admin." }, 201);
   } catch (error) {
     console.error("[orders/proof] Gagal menyimpan bukti pembayaran", error);
