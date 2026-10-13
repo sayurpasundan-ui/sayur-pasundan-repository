@@ -44,7 +44,17 @@ async function login(event) {
 async function logout() { try { await api("/api/admin/logout",{method:"POST",body:"{}"}); } catch {}showLogin();toast("Anda sudah keluar."); }
 function keyFor(tab,row) { if(tab==="variants")return row.id_varian;if(tab==="units")return row.id_satuan;if(tab==="paymentMethods")return row.code;if(tab==="orders")return row.order_code;return row.id; }
 function currentItems() { return state.data[state.tab]||[]; }
-function filteredItems() { const q=$("#adminSearch").value.trim().toLowerCase();const list=currentItems();return q?list.filter(row=>Object.values(row).some(value=>String(value??"").toLowerCase().includes(q))):list; }
+const ORDER_FILTERS=[["all","Semua"],["verify","Perlu verifikasi"],["unpaid","Belum bayar"],["processed","Diproses"],["delivering","Dikirim"]];
+function orderMatchesFilter(row,filter){if(filter==="verify")return row.payment_status==="awaiting_verification";if(filter==="unpaid")return["awaiting_payment","rejected"].includes(row.payment_status)&&row.status!=="cancelled";if(filter==="processed")return row.status==="processed";if(filter==="delivering")return row.status==="delivering";return true;}
+function renderOrderFilters(){
+  let box=$("#orderFilters");
+  if(state.tab!=="orders"){if(box)box.hidden=true;return;}
+  if(!box){box=document.createElement("div");box.id="orderFilters";box.className="order-filters";$(".admin-table-wrap").before(box);
+    box.addEventListener("click",event=>{const chip=event.target.closest("[data-order-filter]");if(!chip)return;state.orderFilter=chip.dataset.orderFilter;renderTable();});}
+  box.hidden=false;const current=state.orderFilter||"all",orders=state.data.orders||[];
+  box.innerHTML=ORDER_FILTERS.map(([key,label])=>{const count=key==="all"?orders.length:orders.filter(row=>orderMatchesFilter(row,key)).length;return `<button type="button" class="order-chip${key===current?" active":""}${key==="verify"&&count?" attention":""}" data-order-filter="${key}">${label} <b>${count}</b></button>`;}).join("");
+}
+function filteredItems() { const q=$("#adminSearch").value.trim().toLowerCase();let list=currentItems();if(state.tab==="orders"&&state.orderFilter&&state.orderFilter!=="all")list=list.filter(row=>orderMatchesFilter(row,state.orderFilter));return q?list.filter(row=>Object.values(row).some(value=>String(value??"").toLowerCase().includes(q))):list; }
 function pill(value) { const s=String(value||"").toLowerCase();let c="";if(["out_of_stock","archived","cancelled","expired","rejected"].includes(s))c="bad";else if(["draft","low_stock","pre_order","pending","awaiting_payment","awaiting_verification","cod_unpaid"].includes(s))c="warning";return `<span class="admin-status ${c}">${esc(value||"—")}</span>`; }
 function actionButtons(row, tab=state.tab) { const id=esc(keyFor(tab,row));return `<div class="action-cell"><button type="button" class="table-action" data-edit="${id}">${tab==="orders"?"Detail / status":"Edit"}</button>${tab!=="orders"?`<button type="button" class="table-action danger-action" data-archive="${id}">Arsipkan</button>`:""}</div>`; }
 const headersFor = {
@@ -56,6 +66,7 @@ const headersFor = {
 function renderTable() {
   const head=$("#tableHead"),body=$("#tableBody"),items=filteredItems(),headers=headersFor[state.tab]||[];
   head.innerHTML=`<tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr>`;
+  renderOrderFilters();
   if(!items.length){body.innerHTML=`<tr><td colspan="${headers.length}" class="admin-empty">${$("#adminSearch").value.trim()?"Tidak ada data yang cocok.":"Belum ada data. Tekan Tambah data untuk memulai."}</td></tr>`;return;}
   body.innerHTML=items.map(row=>{
     if(state.tab==="products")return `<tr><td><strong>${Number(row.id)}</strong><small>${esc(row.sku)}</small></td><td><strong>${esc(row.name)}</strong><small>${esc(row.short_description||"")}</small></td><td>${esc(row.category_name||"—")}</td><td>${row.stock_mode==="unlimited"?"Unlimited":Number(row.stock||0).toLocaleString("id-ID")}</td><td>${pill(row.stock_status)}</td><td>${pill(row.status)}</td><td>${actionButtons(row)}</td></tr>`;
@@ -69,6 +80,8 @@ function renderTable() {
     if(state.tab==="orders")return `<tr><td><strong>${esc(row.order_code)}</strong><small>${new Date(row.created_at).toLocaleString("id-ID")}</small></td><td><strong>${esc(row.customer_name)}</strong><small>${esc(row.customer_phone)}</small></td><td>${esc(row.customer_address)}<small>${esc([row.customer_district,row.customer_city,row.customer_province].filter(Boolean).join(", "))}${row.customer_map_url?` · <a target="_blank" rel="noopener" href="${esc(row.customer_map_url)}">Google Maps ↗</a>`:""}</small></td><td><strong>${rp(row.total)}</strong><small>${esc(row.payment_method_name||row.payment_method)}</small></td><td>${pill(row.status)}</td><td>${pill(row.payment_status)}</td><td>${actionButtons(row)}</td></tr>`;
     return "";
   }).join("");
+  // Label kolom untuk tampilan kartu di HP
+  $$("tr",body).forEach(tr=>$$("td",tr).forEach((td,i)=>{if(headers[i]&&!td.hasAttribute("colspan"))td.dataset.label=headers[i];}));
   $$('[data-edit]',body).forEach(btn=>btn.addEventListener("click",()=>{const item=currentItems().find(row=>String(keyFor(state.tab,row))===btn.dataset.edit);if(item)openEditor(item);}));
   $$('[data-archive]',body).forEach(btn=>btn.addEventListener("click",()=>archiveRecord(btn.dataset.archive)));
 }
