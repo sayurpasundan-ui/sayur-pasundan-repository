@@ -50,3 +50,4 @@ python scripts/check-schema.py
 ```
 
 Pemeriksaan ini tidak menggantikan tes transaksi end-to-end dengan binding D1/R2 preview. Jangan menambahkan custom domain, melakukan impor ke D1 produksi, atau menerima pesanan pelanggan sebelum gerbang kesiapan dalam audit diselesaikan.
+Deployment refresh
