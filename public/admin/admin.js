@@ -10,7 +10,37 @@ function setNotice(text,show=true) { const node=$("#adminNotice");node.textConte
 function showLogin() { $("#loginPanel").hidden=false;$("#adminPanel").hidden=true; }
 function showApp() { $("#loginPanel").hidden=true;$("#adminPanel").hidden=false; }
 async function checkSession() { try { await api("/api/admin/me");showApp();await loadData(); } catch { showLogin(); } }
-async function login(event) { event.preventDefault();const form=new FormData(event.currentTarget),error=$("#loginError"),button=$("button[type='submit']",event.currentTarget);button.disabled=true;error.hidden=true;try{await api("/api/admin/login",{method:"POST",body:JSON.stringify({password:String(form.get("password")||"")})});event.currentTarget.reset();showApp();await loadData();}catch(err){error.textContent=err.message;error.hidden=false;}finally{button.disabled=false;} }
+
+async function login(event) {
+  event.preventDefault();
+
+  const formElement = event.currentTarget;
+  const form = new FormData(formElement);
+  const error = $("#loginError");
+  const button = $("button[type='submit']", formElement);
+
+  button.disabled = true;
+  error.hidden = true;
+
+  try {
+    await api("/api/admin/login", {
+      method: "POST",
+      body: JSON.stringify({
+        password: String(form.get("password") || "")
+      })
+    });
+
+    formElement.reset();
+    showApp();
+    await loadData();
+  } catch (err) {
+    error.textContent = err.message;
+    error.hidden = false;
+  } finally {
+    button.disabled = false;
+  }
+}
+
 async function logout() { try { await api("/api/admin/logout",{method:"POST",body:"{}"}); } catch {}showLogin();toast("Anda sudah keluar."); }
 function keyFor(tab,row) { if(tab==="variants")return row.id_varian;if(tab==="units")return row.id_satuan;if(tab==="paymentMethods")return row.code;if(tab==="orders")return row.order_code;return row.id; }
 function currentItems() { return state.data[state.tab]||[]; }
