@@ -52,8 +52,11 @@ assert.match(createOrder, /shippingQuote\(subtotal, distanceKm, settings\)/);
 assert.match(createOrder, /payment_refs/);
 assert.match(trackApi, /normalizePhone/);
 assert.match(trackApi, /sameOrigin\(request\)/, "Pelacakan harus menerima POST dari origin website saja");
-assert.match(proofApi, /MAX_BYTES = 2 \* 1024 \* 1024/);
-assert.match(proofApi, /PAYMENT_PROOFS/);
+assert.match(
+  proofApi,
+  /const mode = proofStorageMode\(env\), MAX_BYTES = mode === "r2" \? R2_MAX_BYTES : D1_MAX_BYTES/
+);
+assert.match(proofApi, /payment_proof_files/);
 assert.match(proofApi, /validMagic/);
 assert.match(adminApi, /verify_payment/);
 assert.match(adminApi, /reject_payment/);
