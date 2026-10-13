@@ -1,3 +1,4 @@
+import { emit } from "./notify.js";
 const STORE_LAT = -7.059522;
 const STORE_LNG = 107.764035;
 const FREE_SHIPPING_MIN = 50000;
@@ -80,9 +81,9 @@ export function displayOrderStatus(order) {
   return "Pesanan diterima";
 }
 
-export async function expireOverdueOrders(db) {
+export async function expireOverdueOrders(db, notifyCtx = null) {
   const cutoff = new Date().toISOString();
-  const { results = [] } = await db.prepare(`SELECT id FROM orders
+  const { results = [] } = await db.prepare(`SELECT id,order_code,customer_name,total,payment_method FROM orders
     WHERE payment_status IN ('awaiting_payment','rejected') AND payment_due_at IS NOT NULL AND payment_due_at <= ?
       AND status <> 'cancelled' LIMIT 100`).bind(cutoff).all();
   let expired = 0;
@@ -98,6 +99,7 @@ export async function expireOverdueOrders(db) {
       db.prepare(`INSERT INTO order_status_history(order_id,status,payment_status,note,changed_by) VALUES(?,'cancelled','expired','Batas pembayaran terlewati','system')`).bind(order.id)
     ]);
     expired++;
+    if (notifyCtx?.env) { const pending = emit(notifyCtx, { type: "order_expired", order }); if (typeof notifyCtx.waitUntil !== "function") await pending; }
   }
   return expired;
 }
