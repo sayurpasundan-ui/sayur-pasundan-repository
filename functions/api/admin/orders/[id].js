@@ -1,9 +1,10 @@
 import { json, readJson, requireDb, sameOrigin } from "../../../_lib/http.js";
 import { requireAdmin } from "../../../_lib/auth.js";
+import { emit } from "../../../_lib/notify.js";
 
 const ORDER_STATUSES = new Set(["pending", "processed", "delivering", "completed", "cancelled"]);
 
-export async function onRequestPatch({ request, env, params }) {
+export async function onRequestPatch({ request, env, params, waitUntil }) {
   const auth = await requireAdmin(request, env); if (!auth.ok) return auth.response;
   if (!sameOrigin(request)) return json({ error: "Origin tidak diizinkan." }, 403);
   if (!env?.DB) return json({ error: "Database belum tersambung." }, 503);
@@ -26,6 +27,7 @@ export async function onRequestPatch({ request, env, params }) {
         db.prepare(`DELETE FROM payment_refs WHERE order_id=?`).bind(order.id),
         db.prepare(`INSERT INTO order_status_history(order_id,status,payment_status,note,changed_by) VALUES(?,'processed','paid','Pembayaran diverifikasi admin','admin')`).bind(order.id)
       ]);
+      emit({ env, waitUntil }, { type: "payment_verified", order });
       return json({ ok: true, message: "Pembayaran terverifikasi. Pesanan masuk tahap diproses." });
     }
     if (action === "reject_payment") {
@@ -38,6 +40,7 @@ export async function onRequestPatch({ request, env, params }) {
         db.prepare(`UPDATE orders SET payment_status='rejected',updated_at=? WHERE id=?`).bind(now, order.id),
         db.prepare(`INSERT INTO order_status_history(order_id,status,payment_status,note,changed_by) VALUES(?,?,?,'Bukti ditolak: ' || ?,'admin')`).bind(order.id, order.status, "rejected", note)
       ]);
+      emit({ env, waitUntil }, { type: "payment_rejected", order, note });
       return json({ ok: true, message: "Bukti ditolak. Pelanggan dapat mengunggah ulang selama batas pembayaran belum lewat." });
     }
     if (action === "cod_paid") {
@@ -46,6 +49,7 @@ export async function onRequestPatch({ request, env, params }) {
         db.prepare(`UPDATE orders SET payment_status='cod_paid',paid_at=?,cod_paid_at=?,updated_at=? WHERE id=?`).bind(now, now, now, order.id),
         db.prepare(`INSERT INTO order_status_history(order_id,status,payment_status,note,changed_by) VALUES(?,'delivering','cod_paid','Pembayaran COD diterima admin','admin')`).bind(order.id)
       ]);
+      emit({ env, waitUntil }, { type: "cod_paid", order });
       return json({ ok: true, message: "Pembayaran COD diterima." });
     }
 
@@ -70,6 +74,7 @@ export async function onRequestPatch({ request, env, params }) {
       db.prepare(`DELETE FROM payment_refs WHERE order_id=? AND ? IN ('cancelled','completed')`).bind(order.id, status),
       db.prepare(`INSERT INTO order_status_history(order_id,status,payment_status,note,changed_by) VALUES(?,?,?,?, 'admin')`).bind(order.id, status, paymentStatus, `Status pesanan diubah menjadi ${status}`)
     ]);
+    if (status !== order.status) emit({ env, waitUntil }, { type: { processed: "status_processed", delivering: "status_delivering", completed: "status_completed", cancelled: "order_cancelled" }[status], order });
     return json({ ok: true, message: "Status pesanan diperbarui." });
   } catch (error) {
     console.error("[admin/orders/:id] Gagal memperbarui pesanan", error);
