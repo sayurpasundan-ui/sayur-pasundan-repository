@@ -44,8 +44,11 @@ assert.match(upload, /validImageMagic\(file\.type, bytes\)/);
 assert.match(upload, /requireAdmin/);
 assert.match(upload, /sameOrigin/);
 const proofUpload = await read("functions/api/orders/[code]/proof.js");
-assert.match(proofUpload, /MAX_BYTES = 2 \* 1024 \* 1024/);
-assert.match(proofUpload, /PAYMENT_PROOFS/);
+assert.match(
+  proofUpload,
+  /const mode = proofStorageMode\(env\), MAX_BYTES = mode === "r2" \? R2_MAX_BYTES : D1_MAX_BYTES/
+);
+assert.match(proofUpload, /payment_proof_files/);
 assert.match(proofUpload, /validMagic\(file\.type, bytes\)/);
 const proofRoute = await read("functions/api/admin/payment-proofs/[id].js");
 assert.match(proofRoute, /requireAdmin/);
