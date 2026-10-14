@@ -90,7 +90,7 @@ export async function expireOverdueOrders(db, notifyCtx = null) {
   for (const order of results) {
     // Conditional update prevents a concurrent payment verification from being overwritten.
     const changedAt = new Date().toISOString();
-    const updated = await db.prepare(`UPDATE orders SET status='cancelled',payment_status='expired',cancelled_at=?,cancellation_reason='Batas pembayaran 24 jam terlewati',updated_at=?
+    const updated = await db.prepare(`UPDATE orders SET status='cancelled',payment_status='expired',cancelled_at=?,cancellation_reason='Batas waktu pembayaran terlewati',updated_at=?
       WHERE id=? AND payment_status IN ('awaiting_payment','rejected') AND payment_due_at<=? AND status <> 'cancelled'`)
       .bind(changedAt, changedAt, order.id, cutoff).run();
     if (Number(updated?.meta?.changes || 0) < 1) continue;

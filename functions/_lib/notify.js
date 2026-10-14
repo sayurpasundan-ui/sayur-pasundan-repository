@@ -149,7 +149,7 @@ export function buildMessage(event) {
     case "status_delivering": return { audience: "customer", title: "Pesanan dikirim", body: `Pesanan ${code} sedang dalam pengiriman.${String(o.payment_method).toLowerCase() === "cod" ? " Siapkan pembayaran saat barang tiba." : ""}` };
     case "status_completed": return { audience: "customer", title: "Pesanan selesai", body: `Pesanan ${code} selesai. Terima kasih sudah berbelanja di Sayur Pasundan!` };
     case "cod_paid": return { audience: "customer", title: "Pembayaran COD diterima", body: `Pembayaran COD pesanan ${code} sudah kami terima. Terima kasih!` };
-    case "order_cancelled": return { audience: "customer", title: "Pesanan dibatalkan", body: `Pesanan ${code} dibatalkan. Hubungi toko bila ada pertanyaan.` };
+    case "order_cancelled": return { audience: "customer", title: "Pesanan dibatalkan", body: `Pesanan ${code} dibatalkan${note ? `: ${note}` : "."} Hubungi toko bila ada pertanyaan.` };
     case "order_expired": return { audience: "customer", title: "Pesanan dibatalkan", body: `Pesanan ${code} dibatalkan karena batas waktu pembayaran terlewati.` };
     default: return null;
   }
