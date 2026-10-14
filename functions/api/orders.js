@@ -132,7 +132,7 @@ export async function onRequestPost({ request, env, waitUntil }) {
   if (!isCod) message += `\nKode unik: ${String(chosenCode).padStart(3, "0")}\nTotal transfer: Rp${paymentAmount.toLocaleString("id-ID")}`;
   message += `\n${paymentMessage}`;
   if (customer.notes) message += `\n\nCatatan: ${customer.notes}`;
-  const storePhone = String(settings.whatsappPhone || env.PUBLIC_WA_PHONE || "6281221031765").replace(/\D/g, "");
+  const storePhone = String(settings.whatsappPhone || env.PUBLIC_WA_PHONE || "6282126014726").replace(/\D/g, "");
   return json({ ok: true, order_code: code, customer_phone: customer.phone, customer_map_url: customer.mapUrl, subtotal, shipping_fee: shipping.shipping_fee,
     distance_km: distanceKm == null ? null : Math.round(distanceKm * 100) / 100, total, payment_method: paymentMethod.name,
     payment_method_code: methodCode, payment_status: initialPaymentStatus, payment_unique_code: chosenCode ? String(chosenCode).padStart(3, "0") : null,

@@ -2,7 +2,7 @@ import { json } from "../_lib/http.js";
 import { readStoreSettings } from "../_lib/store-config.js";
 
 function normalizeWhatsApp(value) {
-  const digits = String(value || "081221031765").replace(/[^0-9]/g, "");
+  const digits = String(value || "082126014726").replace(/[^0-9]/g, "");
   if (digits.startsWith("0")) return `62${digits.slice(1)}`;
   if (digits.startsWith("8")) return `62${digits}`;
   return digits;
