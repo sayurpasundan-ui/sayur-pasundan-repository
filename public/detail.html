@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" href="/icon-192.png" type="image/png">
   <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/units.js" defer></script>
   <script src="/assets/detail.js" defer></script>
 </head>
 <body class="detail-page">
@@ -33,6 +34,7 @@
           <label>Merk / varian<select id="detailVariant" class="select-field"></select></label>
           <label>Satuan jual<select id="detailUnit" class="select-field"></select></label>
           <label>Jumlah<input id="detailQuantity" class="quantity-field" type="number" min="1" step="1" value="1"></label>
+          <p class="tiny muted" id="detailConversion" hidden></p>
         </div>
         <p class="detail-stock" id="detailStock">Tersedia</p>
         <div class="detail-actions"><button class="button button-dark" id="detailAdd" type="button">Tambah ke Keranjang</button><button class="button button-orange" id="detailBuy" type="button">Beli Sekarang</button></div>
