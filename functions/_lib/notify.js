@@ -113,20 +113,25 @@ async function pushTo(db, env, subs, message) {
 
 async function sendTelegram(env, text) {
   const token = String(env?.TELEGRAM_BOT_TOKEN || "").trim(), chat = String(env?.TELEGRAM_CHAT_ID || "").trim();
-  if (!token || !chat) return { skipped: true };
+  if (!token || !chat) return { skipped: true, missing: [!token && "TELEGRAM_BOT_TOKEN", !chat && "TELEGRAM_CHAT_ID"].filter(Boolean) };
   const base = String(env?.TELEGRAM_API_BASE || "https://api.telegram.org").replace(/\/$/, "");
   const res = await fetch(`${base}/bot${token}/sendMessage`, { method: "POST", headers: { "content-type": "application/json" },
     body: JSON.stringify({ chat_id: chat, text, disable_web_page_preview: true }) });
-  return res.ok ? { ok: true } : { ok: false, status: res.status };
+  return res.ok ? { ok: true } : { ok: false, status: res.status, error: await readErrorMessage(res) };
+}
+
+async function readErrorMessage(res) {
+  const text = await res.text().catch(() => "");
+  try { const data = JSON.parse(text); return String(data.message || data.error?.message || data.error || "").slice(0, 240); } catch { return text.slice(0, 240); }
 }
 
 async function sendAdminEmail(env, subject, text) {
   const apiKey = String(env?.RESEND_API_KEY || "").trim(), to = String(env?.ADMIN_NOTIFY_EMAIL || "").trim();
-  if (!apiKey || !to) return { skipped: true };
+  if (!apiKey || !to) return { skipped: true, missing: [!to && "ADMIN_NOTIFY_EMAIL", !apiKey && "RESEND_API_KEY"].filter(Boolean) };
   const res = await fetch(String(env?.RESEND_API_URL || RESEND_URL), { method: "POST",
     headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({ from: String(env?.RESEND_FROM_EMAIL || "onboarding@resend.dev").trim(), to: [to], subject, text }) });
-  return res.ok ? { ok: true } : { ok: false, status: res.status };
+  return res.ok ? { ok: true } : { ok: false, status: res.status, error: await readErrorMessage(res) };
 }
 
 const rp = n => `Rp${Number(n || 0).toLocaleString("id-ID")}`;
@@ -184,9 +189,10 @@ export async function channelStatus(env) {
   const db = env?.DB;
   let adminDevices = 0;
   if (db) { await ensureNotifyTables(db); adminDevices = Number((await db.prepare(`SELECT COUNT(*) AS n FROM push_subscriptions WHERE role='admin'`).first())?.n || 0); }
+  const has = name => Boolean(String(env?.[name] || "").trim());
   return {
     push: { adminDevices },
-    telegram: Boolean(env?.TELEGRAM_BOT_TOKEN && env?.TELEGRAM_CHAT_ID),
-    email: Boolean(env?.RESEND_API_KEY && env?.ADMIN_NOTIFY_EMAIL)
+    telegram: { ready: has("TELEGRAM_BOT_TOKEN") && has("TELEGRAM_CHAT_ID"), missing: ["TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID"].filter(n => !has(n)) },
+    email: { ready: has("RESEND_API_KEY") && has("ADMIN_NOTIFY_EMAIL"), missing: ["ADMIN_NOTIFY_EMAIL", "RESEND_API_KEY"].filter(n => !has(n)), sender: String(env?.RESEND_FROM_EMAIL || "onboarding@resend.dev") }
   };
 }

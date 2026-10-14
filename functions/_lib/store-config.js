@@ -3,7 +3,7 @@ import { allowedCodDistricts as parseDistricts, normalizePlace } from "./order-u
 const DEFAULTS = {
   store_name: "SAYUR PASUNDAN",
   tagline: "Rencanakan Masakan Anda",
-  whatsapp_phone: "081221031765",
+  whatsapp_phone: "082126014726",
   store_email: "sayurpasundan@gmail.com",
   warehouse_address: "Jl Panggilingan, Kp Pasir Angin, Desa Sukamantri, Kecamatan Paseh, Kabupaten Bandung, Jawa Barat 40383",
   warehouse_lat: "-7.059522",
@@ -41,6 +41,8 @@ export async function readStoreSettings(db, env = {}) {
       for (const row of results) if (Object.hasOwn(DEFAULTS, row.setting_key) && row.setting_value != null) values[row.setting_key] = String(row.setting_value);
     } catch { /* Before migration 0004, defaults and environment are used. */ }
   }
+  // Nomor WhatsApp lama yang masih tersimpan di database otomatis diganti nomor toko yang baru.
+  if (["081221031765", "6281221031765"].includes(String(values.whatsapp_phone || "").replace(/\D/g, ""))) values.whatsapp_phone = DEFAULTS.whatsapp_phone;
   const n = key => Number.isFinite(Number(values[key])) ? Number(values[key]) : Number(DEFAULTS[key]);
   return {
     raw: values,
