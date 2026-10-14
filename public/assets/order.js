@@ -20,7 +20,7 @@ function statusSteps(order) {
   else if (order.payment_status === "paid" || order.payment_status === "cod_unpaid") active = transfer ? 2 : 0;
   if (order.status === "delivering") active = transfer ? 3 : (order.payment_status === "cod_paid" ? 2 : 1);
   if (order.status === "completed") active = steps.length - 1;
-  if (order.status === "cancelled" || order.payment_status === "expired") return `<p class="order-alert is-error">${esc(order.display_status)}. Untuk bantuan, hubungi toko.</p>`;
+  if (order.status === "cancelled" || order.payment_status === "expired") return `<p class="order-alert is-error">${esc(order.display_status)}${order.cancellation_reason ? ` — ${esc(order.cancellation_reason)}` : ""}. Untuk bantuan, hubungi toko.</p>`;
   return `<ol class="order-step-list">${steps.map((step, index) => `<li class="${index < active ? "is-done" : index === active ? "is-current" : ""}"><span>${index < active ? "✓" : index + 1}</span><small>${esc(step)}</small></li>`).join("")}</ol>`;
 }
 function renderItems(order) {
