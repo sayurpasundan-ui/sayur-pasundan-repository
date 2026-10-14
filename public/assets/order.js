@@ -25,7 +25,7 @@ function statusSteps(order) {
 }
 function renderItems(order) {
   const target = $("#orderItems");
-  target.innerHTML = `<h3>Rincian barang</h3>` + order.items.map(item => `<div class="order-item-row"><span><strong>${esc(item.product_name)}</strong><small>${esc(item.variant_label || "")} ${item.variant_label ? "·" : ""} ${esc(item.quantity)} × ${esc(item.unit_label)}</small></span><strong>${rupiah(item.line_total)}</strong></div>`).join("");
+  target.innerHTML = `<h3>Rincian barang</h3>` + order.items.map(item => `<div class="order-item-row"><span><strong>${esc(item.product_name)}</strong><small>${esc(item.variant_label || "")} ${item.variant_label ? "·" : ""} ${esc(item.quantity)} × ${esc(item.unit_label)}${itemConversion(item)}</small></span><strong>${rupiah(item.line_total)}</strong></div>`).join("");
 }
 function renderMoney(order) {
   const rows = [
@@ -105,6 +105,12 @@ async function renderPushBox(order) {
     } catch (error) { note.textContent = error.message || "Notifikasi belum dapat diaktifkan."; note.hidden = false; button.disabled = false; }
   });
 }
+function itemConversion(item) {
+  const q = Number(item.quantity);
+  if (!window.SPUnits || !Number.isFinite(q) || Number.isInteger(q)) return "";
+  const text = SPUnits.describe(item.unit_label, q);
+  return text ? ` (≈ ${esc(text)})` : "";
+}
 function renderOrder(order) {
   activeOrder = order; $("#orderResult").hidden = false;
   $("#orderCodeTitle").textContent = order.order_code;
@@ -122,7 +128,7 @@ function renderOrder(order) {
     mapLink.hidden = !safeMapUrl;
     if (safeMapUrl) mapLink.href = safeMapUrl; else mapLink.removeAttribute("href");
   }
-  $("#orderWhatsapp").href = state.whatsappUrl || order.whatsapp_url || "https://wa.me/6281221031765";
+  $("#orderWhatsapp").href = state.whatsappUrl || order.whatsapp_url || "https://wa.me/6282126014726";
   renderPayment(order);
   const proofForm = $("#proofForm");
   if (proofForm) proofForm.onsubmit = uploadProof;
