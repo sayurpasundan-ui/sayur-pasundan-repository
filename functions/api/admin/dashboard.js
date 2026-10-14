@@ -17,7 +17,7 @@ export async function onRequestGet({ request, env }) {
     const db = requireDb(env);
     const today = jakartaStartOfDay();
     const month = jakartaStartOfMonth();
-    const [newOrders, verification, daySales, monthSales, products, activeProducts, units, recent] = await Promise.all([
+    const [newOrders, verification, daySales, monthSales, products, activeProducts, units, recent, processing, delivering, completedToday, completedMonth, completedTotal, completed] = await Promise.all([
       db.prepare("SELECT COUNT(*) AS count FROM orders WHERE created_at >= ? AND status <> 'cancelled'").bind(today).first(),
       db.prepare("SELECT COUNT(*) AS count FROM orders WHERE payment_status='awaiting_verification'").first(),
       db.prepare("SELECT COALESCE(SUM(total),0) AS total FROM orders WHERE created_at>=? AND payment_status IN ('paid','cod_paid') AND status<>'cancelled'").bind(today).first(),
@@ -25,13 +25,21 @@ export async function onRequestGet({ request, env }) {
       db.prepare("SELECT COUNT(*) AS count FROM products").first(),
       db.prepare("SELECT COUNT(*) AS count FROM products WHERE lower(status)='active'").first(),
       db.prepare("SELECT COUNT(*) AS count FROM sale_units WHERE lower(status)='active'").first(),
-      db.prepare("SELECT order_code,customer_name,total,status,payment_status,payment_method,created_at FROM orders ORDER BY created_at DESC LIMIT 8").all()
+      db.prepare("SELECT order_code,customer_name,total,status,payment_status,payment_method,created_at FROM orders ORDER BY created_at DESC LIMIT 8").all(),
+      db.prepare("SELECT COUNT(*) AS count FROM orders WHERE status='processed'").first(),
+      db.prepare("SELECT COUNT(*) AS count FROM orders WHERE status='delivering'").first(),
+      db.prepare("SELECT COUNT(*) AS count FROM orders WHERE status='completed' AND updated_at>=?").bind(today).first(),
+      db.prepare("SELECT COUNT(*) AS count FROM orders WHERE status='completed' AND updated_at>=?").bind(month).first(),
+      db.prepare("SELECT COUNT(*) AS count FROM orders WHERE status='completed'").first(),
+      db.prepare("SELECT order_code,customer_name,total,status,payment_status,payment_method,created_at,updated_at FROM orders WHERE status='completed' ORDER BY updated_at DESC LIMIT 10").all()
     ]);
     return json({ ok: true, metrics: {
       newOrders: Number(newOrders?.count || 0), awaitingVerification: Number(verification?.count || 0),
       salesToday: Number(daySales?.total || 0), salesMonth: Number(monthSales?.total || 0),
+      processing: Number(processing?.count || 0), delivering: Number(delivering?.count || 0),
+      completedToday: Number(completedToday?.count || 0), completedMonth: Number(completedMonth?.count || 0), completedTotal: Number(completedTotal?.count || 0),
       products: Number(products?.count || 0), activeProducts: Number(activeProducts?.count || 0), activeUnits: Number(units?.count || 0)
-    }, recentOrders: recent.results || [] });
+    }, recentOrders: recent.results || [], completedOrders: completed.results || [] });
   } catch (error) {
     console.error("[admin/dashboard]", error);
     return json({ error: "Ringkasan belum tersedia. Pastikan migrasi database sudah dijalankan." }, 503);
