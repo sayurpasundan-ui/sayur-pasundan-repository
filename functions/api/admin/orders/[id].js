@@ -1,8 +1,18 @@
 import { json, readJson, requireDb, sameOrigin } from "../../../_lib/http.js";
 import { requireAdmin } from "../../../_lib/auth.js";
 import { emit } from "../../../_lib/notify.js";
+import { expireOverdueOrders, money } from "../../../_lib/order-utils.js";
 
 const ORDER_STATUSES = new Set(["pending", "processed", "delivering", "completed", "cancelled"]);
+// Alasan resmi pembatalan/retur. Pesanan yang sudah dikirim (atau selesai) WAJIB memakai salah satunya.
+const CANCEL_REASONS = {
+  customer_absent: "Customer tidak ada di rumah",
+  damaged: "Barang rusak",
+  not_as_described: "Barang tidak sesuai pesanan",
+  out_of_stock: "Barang kosong",
+  unreachable: "Customer tidak dapat dihubungi",
+  address_not_found: "Alamat tidak ditemukan"
+};
 
 export async function onRequestPatch({ request, env, params, waitUntil }) {
   const auth = await requireAdmin(request, env); if (!auth.ok) return auth.response;
@@ -12,6 +22,7 @@ export async function onRequestPatch({ request, env, params, waitUntil }) {
   const code = String(params.id || "").toUpperCase();
   const db = requireDb(env);
   try {
+    try { await expireOverdueOrders(db, { env, waitUntil }); } catch (error) { console.error("[admin/orders/:id] sweeper gagal", error); }
     const order = await db.prepare(`SELECT * FROM orders WHERE order_code=?`).bind(code).first();
     if (!order) return json({ error: "Pesanan tidak ditemukan." }, 404);
     const now = new Date().toISOString();
@@ -66,15 +77,46 @@ export async function onRequestPatch({ request, env, params, waitUntil }) {
         return json({ error: "Verifikasi pembayaran sebelum memproses pesanan." }, 409);
       }
     }
-    if (status === "cancelled" && ["paid", "cod_paid"].includes(order.payment_status)) return json({ error: "Pesanan yang telah dibayar tidak dapat dibatalkan dari panel ini. Proses pengembalian dana harus ditangani terpisah." }, 409);
-    const paymentStatus = status === "cancelled" ? "cancelled" : order.payment_status;
+    const alreadyCancelled = order.status === "cancelled" || order.payment_status === "expired";
+    if (alreadyCancelled && status !== "cancelled") return json({ error: "Pesanan yang sudah dibatalkan tidak dapat diaktifkan kembali. Minta pelanggan membuat pesanan baru." }, 409);
+
+    if (status === "cancelled") {
+      // Pelanggan tidak punya endpoint pembatalan; pembatalan/retur hanya lewat admin.
+      if (alreadyCancelled) return json({ ok: true, message: "Pesanan sudah dibatalkan sebelumnya." });
+      const reasonCode = String(body?.cancel_reason_code || "").trim();
+      const reasonNote = String(body?.cancel_reason_note || "").trim().slice(0, 300);
+      if (reasonCode && !CANCEL_REASONS[reasonCode]) return json({ error: "Alasan pembatalan tidak dikenali." }, 400);
+      const lateStage = ["delivering", "completed"].includes(order.status);
+      if (lateStage && !reasonCode) return json({ error: "Pesanan yang sudah dikirim hanya dapat dibatalkan/diretur dengan salah satu alasan: customer tidak ada di rumah, tidak dapat dihubungi, alamat tidak ditemukan, barang rusak, barang tidak sesuai, atau barang kosong." }, 400);
+      const label = reasonCode ? CANCEL_REASONS[reasonCode] : "Dibatalkan oleh admin";
+      const reason = reasonNote ? `${label} — ${reasonNote}` : label;
+      // Uang yang sudah diterima (transfer terverifikasi / COD diterima) dicatat sebagai pengurang penerimaan.
+      const wasPaid = ["paid", "cod_paid"].includes(order.payment_status);
+      const refundAmount = wasPaid ? money(order.total) : 0;
+      const returnedAt = lateStage || wasPaid ? now : null;
+      const historyNote = `${lateStage ? "Retur/dibatalkan" : "Dibatalkan"} admin: ${reason}${refundAmount ? ` · pengurang penerimaan ${refundAmount}` : ""}`;
+      try {
+        await db.batch([
+          db.prepare(`UPDATE orders SET status='cancelled',payment_status='cancelled',cancelled_at=?,cancellation_reason=?,cancel_reason_code=?,cancelled_stage=?,refund_amount=?,returned_at=?,updated_at=? WHERE id=? AND status<>'cancelled'`)
+            .bind(now, reason, reasonCode || null, order.status, refundAmount, returnedAt, now, order.id),
+          db.prepare(`UPDATE payment_proofs SET status='rejected',reviewed_at=?,review_note='Pesanan dibatalkan' WHERE order_id=? AND status='pending'`).bind(now, order.id),
+          db.prepare(`DELETE FROM payment_refs WHERE order_id=?`).bind(order.id),
+          db.prepare(`INSERT INTO order_status_history(order_id,status,payment_status,note,changed_by) VALUES(?,'cancelled','cancelled',?,'admin')`).bind(order.id, historyNote.slice(0, 400))
+        ]);
+      } catch (error) {
+        if (/no such column|has no column/i.test(String(error?.message || error))) return json({ error: "Kolom pembatalan/retur belum ada. Jalankan migrasi database 0011_cancel_return.sql terlebih dahulu." }, 503);
+        throw error;
+      }
+      emit({ env, waitUntil }, { type: "order_cancelled", order, note: reason });
+      return json({ ok: true, message: refundAmount ? `Pesanan dibatalkan/diretur. Penerimaan dikurangi Rp${refundAmount.toLocaleString("id-ID")}; kembalikan dana ke pelanggan secara manual.` : "Pesanan dibatalkan." });
+    }
+
     await db.batch([
-      db.prepare(`UPDATE orders SET status=?,payment_status=?,cancelled_at=?,cancellation_reason=?,updated_at=? WHERE id=?`)
-        .bind(status, paymentStatus, status === "cancelled" ? now : order.cancelled_at, status === "cancelled" ? "Dibatalkan oleh admin" : order.cancellation_reason, now, order.id),
-      db.prepare(`DELETE FROM payment_refs WHERE order_id=? AND ? IN ('cancelled','completed')`).bind(order.id, status),
-      db.prepare(`INSERT INTO order_status_history(order_id,status,payment_status,note,changed_by) VALUES(?,?,?,?, 'admin')`).bind(order.id, status, paymentStatus, `Status pesanan diubah menjadi ${status}`)
+      db.prepare(`UPDATE orders SET status=?,updated_at=? WHERE id=?`).bind(status, now, order.id),
+      db.prepare(`DELETE FROM payment_refs WHERE order_id=? AND ?='completed'`).bind(order.id, status),
+      db.prepare(`INSERT INTO order_status_history(order_id,status,payment_status,note,changed_by) VALUES(?,?,?,?, 'admin')`).bind(order.id, status, order.payment_status, `Status pesanan diubah menjadi ${status}`)
     ]);
-    if (status !== order.status) emit({ env, waitUntil }, { type: { processed: "status_processed", delivering: "status_delivering", completed: "status_completed", cancelled: "order_cancelled" }[status], order });
+    if (status !== order.status) emit({ env, waitUntil }, { type: { processed: "status_processed", delivering: "status_delivering", completed: "status_completed" }[status], order });
     return json({ ok: true, message: "Status pesanan diperbarui." });
   } catch (error) {
     console.error("[admin/orders/:id] Gagal memperbarui pesanan", error);
