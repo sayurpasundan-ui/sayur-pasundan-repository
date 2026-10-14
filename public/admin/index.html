@@ -6,8 +6,10 @@
   <title>Admin — Sayur Pasundan</title>
   <link rel="icon" href="/icon-192.png" type="image/png">
   <link rel="stylesheet" href="/assets/style.css"><link rel="stylesheet" href="/admin/admin.css">
+  <script src="/assets/units.js" defer></script>
   <script src="/assets/push.js" defer></script>
   <script src="/admin/admin.js" defer></script>
+  <script src="/admin/catalog.js" defer></script>
 </head>
 <body class="admin-body">
   <header class="admin-header"><a class="brand" href="/" aria-label="Beranda Sayur Pasundan"><span class="brand-mark brand-logo-wrap"><img src="/assets/images/brand/logo-aplikasi.webp" alt="" width="44" height="42"></span><span><strong>SAYUR PASUNDAN</strong><small>Admin Panel · CV Sahabat Raya Nusantara</small></span></a><a href="/" class="back-link">← Lihat website</a></header>
@@ -21,12 +23,17 @@
       <div class="admin-notice" id="adminNotice" role="status" hidden></div>
       <section class="notify-card" id="notifyCard" hidden><div class="card-heading"><div><p class="eyebrow">NOTIFIKASI</p><h3>Kabar pesanan masuk</h3></div></div><div id="notifyBody"></div></section>
       <nav class="admin-tabs" aria-label="Menu admin">
-        <button type="button" class="selected" data-tab="dashboard">Ringkasan</button><button type="button" data-tab="orders">Pesanan</button><button type="button" data-tab="products">Produk</button><button type="button" data-tab="categories">Kategori</button><button type="button" data-tab="variants">Varian</button><button type="button" data-tab="units">Satuan & Harga</button><button type="button" data-tab="photos">Foto Produk</button><button type="button" data-tab="banners">Banner</button><button type="button" data-tab="promotions">Promo</button><button type="button" data-tab="paymentMethods">Pembayaran</button><button type="button" data-tab="settings">Pengaturan Toko</button>
+        <button type="button" class="selected" data-tab="dashboard">Ringkasan</button><button type="button" data-tab="orders">Pesanan</button><button type="button" data-tab="products">Produk</button><button type="button" data-tab="catalog">Varian & Harga</button><button type="button" data-tab="categories">Kategori</button><button type="button" data-tab="variants">Varian</button><button type="button" data-tab="units">Satuan & Harga</button><button type="button" data-tab="photos">Foto Produk</button><button type="button" data-tab="banners">Banner</button><button type="button" data-tab="promotions">Promo</button><button type="button" data-tab="paymentMethods">Pembayaran</button><button type="button" data-tab="settings">Pengaturan Toko</button>
       </nav>
       <section id="dashboardOverview" class="dashboard-overview" aria-label="Ringkasan toko">
         <div class="dashboard-heading"><div><p class="eyebrow">RINGKASAN TOKO</p><h2>Aktivitas toko</h2><p class="muted">Penjualan dihitung dari pesanan yang pembayarannya sudah terverifikasi.</p></div><button class="button button-outline" id="refreshDashboard" type="button">↻ Perbarui ringkasan</button></div>
         <div class="metric-grid" id="metricGrid"><div class="metric-card"><span>Pesanan hari ini</span><strong>—</strong></div><div class="metric-card"><span>Menunggu verifikasi</span><strong>—</strong></div><div class="metric-card"><span>Penjualan hari ini</span><strong>—</strong></div><div class="metric-card"><span>Penjualan bulan ini</span><strong>—</strong></div></div>
-        <div class="dashboard-lower"><section class="admin-card"><div class="card-heading"><h3>Pesanan terbaru</h3><button class="text-button" type="button" data-go-tab="orders">Lihat semua →</button></div><div id="recentOrders" class="recent-order-list"><p class="muted">Memuat ringkasan…</p></div></section><section class="admin-card"><div class="card-heading"><h3>Kesiapan toko</h3></div><div id="storeReadiness" class="readiness-list"><p class="muted">Memeriksa konfigurasi…</p></div></section></div>
+        <div class="dashboard-lower"><section class="admin-card"><div class="card-heading"><h3>Pesanan terbaru</h3><button class="text-button" type="button" data-go-tab="orders">Lihat semua →</button></div><div id="recentOrders" class="recent-order-list"><p class="muted">Memuat ringkasan…</p></div></section><section class="admin-card"><div class="card-heading"><h3>Pesanan selesai</h3><button class="text-button" type="button" data-go-tab="orders">Lihat semua →</button></div><div id="completedOrders" class="recent-order-list"><p class="muted">Memuat ringkasan…</p></div></section><section class="admin-card"><div class="card-heading"><h3>Kesiapan toko</h3></div><div id="storeReadiness" class="readiness-list"><p class="muted">Memeriksa konfigurasi…</p></div></section></div>
+      </section>
+      <section id="catalogPanel" class="catalog-panel" hidden>
+        <div class="dashboard-heading"><div><p class="eyebrow">KATALOG</p><h2>Varian, satuan &amp; harga</h2><p class="muted">Pilih produk, ubah merk/varian, lalu tambahkan satuan dan harga. Satu varian bisa punya banyak satuan (mis. 250 gram, 500 gram, 1 kg).</p></div></div>
+        <div class="cat-picker"><label>Cari produk<input id="catalogSearch" type="search" placeholder="Nama atau SKU…" autocomplete="off"></label><label>Produk<select id="catalogProduct"></select></label></div>
+        <div id="catalogBody"></div>
       </section>
       <section id="storeSettingsPanel" class="settings-panel" hidden>
         <div class="dashboard-heading"><div><p class="eyebrow">KONFIGURASI</p><h2>Pengaturan toko</h2><p class="muted">Nilai ini digunakan di situs dan perhitungan pesanan setelah migrasi Tahap 3 dijalankan.</p></div></div>

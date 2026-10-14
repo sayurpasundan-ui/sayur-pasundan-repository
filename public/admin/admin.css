@@ -33,3 +33,34 @@
 .notify-channels li.on b{background:#dff0d8;color:#2a6b34}
 .notify-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 
+/* Editor Varian & Harga */
+.cat-picker{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin:0 0 16px}
+.cat-picker label,.cat-field{display:flex;flex-direction:column;gap:5px;font:700 12px/1.2 inherit;color:#4a5d4c}
+.cat-picker input,.cat-picker select,.cat-field input,.cat-field select{height:42px;padding:0 12px;border:1px solid #cfdccb;border-radius:11px;background:#fff;font:600 14px inherit;color:#1d2d20;min-width:0}
+.cat-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 14px;flex-wrap:wrap}
+.cat-head h3{margin:0;font-size:18px}
+.cat-variant{background:#fff;border:1px solid #dfe8d8;border-radius:18px;padding:16px;margin:0 0 16px;box-shadow:0 9px 25px #244b2508}
+.cat-variant>header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin:0 0 12px}
+.cat-badge{display:block;font:700 10px/1 inherit;letter-spacing:.06em;text-transform:uppercase;color:#6a7a6c;margin-bottom:4px}
+.cat-preview{font-size:17px;color:#1b5e30}
+.cat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.cat-variant h4{margin:18px 0 10px;font-size:14px}
+.cat-unit{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1.4fr);gap:10px 12px;align-items:end;padding:12px;margin:0 0 10px;border:1px solid #e3ebdc;border-radius:14px;background:#f8faf5}
+.cat-unit .cat-wide{grid-column:1/2}
+.cat-check{display:flex;align-items:center;gap:8px;font:600 13px inherit;color:#2d3d2f;grid-column:span 1}
+.cat-check input{width:18px;height:18px;flex:none}
+.cat-link{border:0;background:none;color:#2d5a34;font:700 12px inherit;text-decoration:underline;cursor:pointer;padding:4px 0;justify-self:start}
+.cat-link.danger{color:#b3321c}
+.cat-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+@media(max-width:720px){
+  .cat-picker,.cat-grid{grid-template-columns:minmax(0,1fr)}
+  .cat-unit{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .cat-unit .cat-wide{grid-column:1/-1}
+  .cat-check,.cat-unit [data-nominal-field]{grid-column:1/-1}
+  .cat-actions .button{flex:1 1 100%}
+  .cat-head .button{width:100%}
+}
+
+
+.cat-field,.cat-picker label{min-width:0}
+.cat-field input,.cat-field select,.cat-picker input,.cat-picker select{width:100%;box-sizing:border-box}
