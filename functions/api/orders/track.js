@@ -12,7 +12,7 @@ export async function onRequestPost({ request, env , waitUntil }) {
   const db = requireDb(env);
   try {
     await expireOverdueOrders(db, { env, waitUntil });
-    const order = await db.prepare(`SELECT id,order_code,customer_name,customer_phone,customer_address,customer_city,customer_district,customer_province,customer_lat,customer_lng,customer_map_url,notes,subtotal,shipping_fee,distance_km,total,status,payment_method,payment_status,payment_unique_code,payment_amount,payment_due_at,paid_at,cod_paid_at,created_at,updated_at FROM orders WHERE order_code=?`).bind(code).first();
+    const order = await db.prepare(`SELECT id,order_code,customer_name,customer_phone,customer_address,customer_city,customer_district,customer_province,customer_lat,customer_lng,customer_map_url,notes,subtotal,shipping_fee,distance_km,total,status,payment_method,payment_status,payment_unique_code,payment_amount,payment_due_at,paid_at,cod_paid_at,cancelled_at,cancellation_reason,created_at,updated_at FROM orders WHERE order_code=?`).bind(code).first();
     if (!order || normalizePhone(order.customer_phone) !== phone) return json({ error: "Pesanan tidak ditemukan. Periksa kode pesanan dan nomor WhatsApp." }, 404);
     const { results: items = [] } = await db.prepare(`SELECT product_name,variant_label,unit_label,quantity,unit_price,line_total FROM order_items WHERE order_id=? ORDER BY id`).bind(order.id).all();
     const method = await db.prepare(`SELECT code,name,kind,account_number,account_name,logo_url,instructions FROM payment_methods WHERE code=?`).bind(order.payment_method).first();
