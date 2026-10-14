@@ -26,7 +26,7 @@ export async function onRequestPost({ request, env , waitUntil }) {
       history.push({ label, at, note: row.payment_status === "rejected" ? String(row.note || "").replace(/^Bukti ditolak:\s*/, "").slice(0, 300) : null });
     }
     const settings = await readStoreSettings(db, env);
-    const phoneTo = String(settings.whatsappPhone || env.PUBLIC_WA_PHONE || "6281221031765").replace(/\D/g, "");
+    const phoneTo = String(settings.whatsappPhone || env.PUBLIC_WA_PHONE || "6282126014726").replace(/\D/g, "");
     const message = `Halo Sayur Pasundan, saya ingin menanyakan pesanan ${order.order_code}. Status saat ini: ${displayOrderStatus(order)}.`;
     return json({ ok: true, order: { ...order, display_status: displayOrderStatus(order), items, method: method || null,
       latest_proof: proof || null, history, whatsapp_url: `https://wa.me/${phoneTo}?text=${encodeURIComponent(message)}` } });
