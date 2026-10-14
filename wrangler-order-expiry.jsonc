@@ -1,0 +1,14 @@
+{
+  "$schema": "https://schemas.cloudflare.com/wrangler/configuration.json",
+  "name": "sayur-pasundan-order-expiry",
+  "main": "workers/order-expiry.js",
+  "compatibility_date": "2026-10-09",
+  "triggers": { "crons": ["*/15 * * * *"] },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "sayur-pasundan-preview",
+      "database_id": "06ed04b3-5c64-47cd-9d81-261fec57e563"
+    }
+  ]
+}￼Enter
