@@ -32,5 +32,5 @@
     return (items || []).reduce((sum, item) => sum + (item.nominal_amount || Number(item.quantity_step) < 1 ? 1 : Number(item.quantity || 0)), 0);
   }
 
-  window.SPUnits = { parse, describe, cartCount, fmt };
+  (typeof window !== "undefined" ? window : globalThis).SPUnits = { parse, describe, cartCount, fmt };
 })();

@@ -1440,7 +1440,7 @@ html, body {
 
 /* navigasi bawah HP: Beranda, Kategori, Keranjang, Lacak Pesanan */
 @media (max-width:720px){
-  .mobile-nav{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+  .mobile-nav{display:grid!important;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:0;padding:6px 2px calc(6px + env(safe-area-inset-bottom))}
   .mobile-nav>a,.mobile-nav>button{min-width:0;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;background:none;color:#7d8b80;font-family:Poppins,Inter,sans-serif;font-weight:700;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent;padding:0}
   .mobile-nav .nav-icon{display:block;width:22px;height:22px;flex:none}
   .mobile-nav .nav-label{display:block;max-width:100%;font-size:10px!important;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

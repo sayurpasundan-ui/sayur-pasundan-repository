@@ -1,0 +1,189 @@
+/* Masak Apa Hari Ini? dan Keranjang Kebutuhan Dapur — melengkapi style.css (memakai variabel warna yang sama) */
+.recipe-page{background:#fffdf8}
+.rp-main{padding-bottom:110px}
+.rp-hero{margin:8px 0 22px;padding:22px;border-radius:24px;background:linear-gradient(135deg,#eef6cf 0%,#dcecb4 100%);position:relative;overflow:hidden}
+.rp-hero h1{margin:0 0 8px;font-size:clamp(26px,5vw,38px);line-height:1.12;letter-spacing:-.03em;color:var(--green-deep)}
+.rp-hero p{margin:0 0 16px;max-width:620px;color:#4c5f50;font-size:14px;line-height:1.7}
+.rp-controls{display:grid;gap:12px}
+.rp-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.rp-field{display:grid;gap:5px;font-size:11px;font-weight:750;color:#536358}
+.rp-field select,.rp-field input{height:44px;min-width:0;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-size:14px}
+.rp-seg{display:inline-flex;padding:4px;border-radius:999px;background:rgba(255,255,255,.75);border:1px solid rgba(47,107,57,.15)}
+.rp-seg button{border:0;background:none;padding:10px 18px;border-radius:999px;font-weight:800;font-size:13px;color:#4c5f50;min-height:44px}
+.rp-seg button[aria-pressed="true"]{background:var(--green-deep);color:#fff}
+.rp-actions{display:flex;flex-wrap:wrap;gap:8px}
+.rp-actions .button{min-height:44px}
+.button-ghost{background:#fff;color:var(--green-deep);border:1px solid var(--line)}
+.rp-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:26px 0 12px;flex-wrap:wrap}
+.rp-section-head h2{margin:0;font-size:clamp(20px,3.4vw,26px);color:var(--green-deep);letter-spacing:-.02em}
+.rp-section-head p{margin:2px 0 0;font-size:12.5px;color:var(--muted)}
+
+/* Rencana menu */
+.rp-days{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
+.rp-days::-webkit-scrollbar{display:none}
+.rp-day{flex:none;min-height:52px;padding:8px 16px;border-radius:16px;border:1px solid var(--line);background:#fff;color:#4c5f50;font-weight:800;font-size:13px;text-align:center;line-height:1.25}
+.rp-day small{display:block;font-size:10.5px;font-weight:700;color:var(--muted)}
+.rp-day[aria-selected="true"]{background:var(--green);border-color:var(--green);color:#fff}
+.rp-day[aria-selected="true"] small{color:#e4f3d6}
+.rp-slots{display:grid;gap:12px;grid-template-columns:repeat(3,minmax(0,1fr))}
+.rp-slot{min-width:0;border:1px solid var(--line);border-radius:20px;background:#fff;padding:12px;display:flex;flex-direction:column;gap:10px}
+.rp-slot-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.rp-slot-head strong{font-size:13px;color:var(--green-deep);letter-spacing:.01em}
+.rp-link{border:0;background:none;padding:6px 2px;min-height:36px;color:var(--green);font-weight:800;font-size:12px;text-decoration:underline;text-underline-offset:3px}
+.rp-link.danger{color:#b3321c}
+.rp-slot-empty{flex:1;display:grid;gap:8px;align-content:center;justify-items:center;min-height:150px;border:2px dashed #dbe5d0;border-radius:16px;padding:14px;text-align:center;color:var(--muted);font-size:12.5px}
+.rp-slot-empty .button{min-height:44px}
+.rp-slot-recipe{display:grid;gap:9px}
+.rp-slot-recipe h3{margin:0;font-size:15px;line-height:1.3;color:#26382b}
+.rp-meta{display:flex;flex-wrap:wrap;gap:6px}
+.rp-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:999px;background:#f1f6e4;color:#456049;font-size:11px;font-weight:750;white-space:nowrap}
+.rp-chip.mudah{background:#e6f5de;color:#2f6b39}.rp-chip.sedang{background:#fff1d6;color:#8a5e12}
+.rp-stepper{display:inline-flex;align-items:center;gap:6px}
+.rp-stepper button{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:#fff;font-size:20px;font-weight:800;color:var(--green-deep);line-height:1}
+.rp-stepper b{min-width:26px;text-align:center;font-size:15px}
+.rp-portion{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);font-weight:700}
+.rp-slot-actions{display:flex;flex-wrap:wrap;gap:4px 12px}
+.rp-target-banner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:0 0 12px;padding:12px 14px;border-radius:14px;background:#fff6dd;border:1px solid #f2dfa4;color:#6c5517;font-size:13px;font-weight:700}
+
+/* Foto resep */
+.rp-photo{position:relative;border-radius:16px;overflow:hidden;background:#eef4dd;aspect-ratio:4/3;width:100%}
+.rp-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.rp-photo-empty img{object-fit:cover}
+.rp-photo-note{position:absolute;left:8px;bottom:8px;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.88);color:#587061;font-size:10.5px;font-weight:700}
+.rp-photo.thumb{aspect-ratio:16/10}
+
+/* Kartu resep */
+.rp-chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
+.rp-chips::-webkit-scrollbar{display:none}
+.rp-filter{flex:none;min-height:40px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;color:#5f6e62;font-size:12.5px;font-weight:750;white-space:nowrap}
+.rp-filter[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+.rp-search{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 10px}
+.rp-search input{flex:1 1 240px;height:46px;padding:0 14px;border:1px solid var(--line);border-radius:14px;background:#fff;font-size:14px}
+.rp-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.rp-card{min-width:0;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 3px 12px rgba(35,75,43,.04)}
+.rp-card .rp-photo{border-radius:0;aspect-ratio:4/3}
+.rp-card-body{display:flex;flex-direction:column;gap:8px;padding:12px;flex:1}
+.rp-card h3{margin:0;font-size:15px;line-height:1.3;color:#26382b}
+.rp-card p{margin:0;font-size:12px;line-height:1.5;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rp-card-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto}
+.rp-card-buttons .button{min-height:44px;padding:10px 8px;font-size:12px}
+.rp-more{display:flex;justify-content:center;margin:20px 0 0}
+.rp-state{padding:36px 18px;border:1px dashed #d9e4cf;border-radius:18px;text-align:center;color:var(--muted);background:#fff}
+.rp-state strong{display:block;color:var(--green-deep);margin-bottom:6px}
+.rp-skeleton{height:250px;border-radius:20px;background:linear-gradient(90deg,#f1f4e6 25%,#f8faef 50%,#f1f4e6 75%);background-size:200% 100%;animation:rp-shimmer 1.3s infinite}
+@keyframes rp-shimmer{to{background-position:-200% 0}}
+
+/* Bar rencana (menempel di bawah) */
+.rp-bar{position:fixed;z-index:30;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(255,253,248,.97);backdrop-filter:blur(12px);border-top:1px solid var(--line);box-shadow:0 -8px 24px rgba(30,70,40,.08)}
+.rp-bar-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1180px;margin:0 auto}
+.rp-bar strong{display:block;font-size:13px;color:var(--green-deep)}
+.rp-bar small{display:block;font-size:11px;color:var(--muted)}
+.rp-bar .button{min-height:46px;white-space:nowrap}
+
+/* Lembar (detail resep, pilih menu, pilih produk) */
+.rp-backdrop{position:fixed;inset:0;z-index:70;background:rgba(15,36,22,.5);backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center}
+.rp-backdrop[hidden]{display:none}
+.rp-sheet{width:min(720px,100%);max-height:94dvh;overflow:auto;background:#fffdf8;border-radius:24px 24px 0 0;padding:0 0 22px;box-shadow:0 -12px 50px rgba(0,0,0,.2);animation:rp-up .2s ease-out}
+@keyframes rp-up{from{transform:translateY(40px);opacity:.5}to{transform:none;opacity:1}}
+.rp-sheet-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 18px;background:rgba(255,253,248,.96);border-bottom:1px solid var(--line)}
+.rp-sheet-head h2{margin:0;font-size:17px;color:var(--green-deep)}
+.rp-close{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:22px;line-height:1;color:#526356}
+.rp-sheet-body{padding:16px 18px 0;display:grid;gap:18px}
+.rp-detail-photo{border-radius:20px}
+.rp-detail h2,.rp-detail h3{margin:0}
+.rp-detail .rp-title{font-size:24px;line-height:1.2;color:var(--green-deep);letter-spacing:-.02em;margin:0}
+.rp-detail .rp-desc{margin:6px 0 0;color:#566a5b;font-size:14px;line-height:1.7}
+.rp-block h3{margin:0 0 10px;font-size:15px;color:var(--green-deep)}
+.rp-portion-box{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:16px;background:#f1f7e1}
+.rp-portion-box span{font-size:13px;font-weight:750;color:#3d5a43}
+.rp-portion-box small{display:block;font-weight:600;color:var(--muted);font-size:11.5px}
+.rp-ingredients{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.rp-ingredients li{display:flex;justify-content:space-between;gap:14px;padding:11px 2px;border-bottom:1px solid #edf0e5;font-size:14px}
+.rp-ingredients li b{white-space:nowrap;color:var(--green-deep)}
+.rp-ingredients .opt{font-size:11px;color:#8a6a1a;font-weight:700;margin-left:6px}
+.rp-steps{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:step}
+.rp-steps li{counter-increment:step;display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;padding:12px;border:1px solid var(--line);border-radius:16px;background:#fff;font-size:14px;line-height:1.65}
+.rp-steps li::before{content:counter(step);display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--green);color:#fff;font-weight:800;font-size:14px}
+.rp-note{padding:12px 14px;border-radius:14px;background:#fff8e3;border:1px solid #f0e0a8;color:#6a5517;font-size:13.5px;line-height:1.65}
+.rp-note.ok{background:#eef7e6;border-color:#d4e8c4;color:#2f5a36}
+.rp-list{margin:0;padding-left:20px;display:grid;gap:5px;font-size:14px}
+.rp-foot{font-size:11.5px;color:var(--muted);line-height:1.6}
+.rp-sheet-foot{display:flex;gap:10px;padding:14px 18px 0}
+.rp-sheet-foot .button{flex:1;min-height:48px}
+.rp-choice{display:flex;flex-wrap:wrap;gap:8px}
+.rp-choice button{min-height:44px;padding:8px 14px;border-radius:14px;border:1px solid var(--line);background:#fff;font-weight:800;font-size:13px;color:#4c5f50;text-align:left;line-height:1.25}
+.rp-choice button small{display:block;font-weight:600;font-size:10.5px;color:var(--muted)}
+.rp-choice button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+.rp-choice button[aria-pressed="true"] small{color:#e4f3d6}
+.rp-label{display:block;margin:0 0 8px;font-size:12px;font-weight:800;color:#536358}
+
+/* Keranjang Kebutuhan Dapur */
+.kd-plan{display:grid;gap:10px}
+.kd-recipe{display:grid;grid-template-columns:84px 1fr;gap:12px;padding:10px;border:1px solid var(--line);border-radius:18px;background:#fff;align-items:center}
+.kd-recipe .rp-photo{aspect-ratio:1/1;border-radius:14px}
+.kd-recipe h3{margin:0 0 4px;font-size:14px;color:#26382b;line-height:1.3}
+.kd-recipe small{color:var(--muted);font-size:11.5px}
+.kd-recipe-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 10px;margin-top:6px}
+.kd-group{margin:22px 0 0}
+.kd-group>h2{margin:0 0 10px;font-size:17px;color:var(--green-deep);display:flex;align-items:center;gap:8px}
+.kd-group>h2 span{font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;background:#eef4dd;color:#456049}
+.kd-lines{display:grid;gap:12px}
+.kd-line{display:grid;gap:10px;padding:14px;border:1px solid var(--line);border-radius:18px;background:#fff}
+.kd-line.is-off{opacity:.62}
+.kd-line-top{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start}
+.kd-check{width:26px;height:26px;margin-top:2px;accent-color:var(--green)}
+.kd-name{margin:0;font-size:15px;font-weight:800;color:#26382b;line-height:1.3}
+.kd-need{margin:3px 0 0;font-size:12.5px;color:#5b6d60;line-height:1.55}
+.kd-need b{color:var(--green-deep)}
+.kd-from{margin:3px 0 0;font-size:11.5px;color:var(--muted)}
+.kd-match{display:grid;grid-template-columns:56px 1fr;gap:12px;padding:10px;border-radius:14px;background:#f7faee;align-items:center}
+.kd-thumb{width:56px;height:56px;border-radius:12px;object-fit:contain;background:#fff;border:1px solid var(--line)}
+.kd-thumb-empty{display:grid;place-items:center;width:56px;height:56px;border-radius:12px;background:#fff;border:1px solid var(--line);color:#8aa08e;font-size:10px;text-align:center;line-height:1.2;padding:4px}
+.kd-match strong{display:block;font-size:13.5px;color:var(--green-deep);line-height:1.3}
+.kd-match select{width:100%;margin-top:6px;height:40px;border:1px solid var(--line);border-radius:10px;padding:0 8px;background:#fff;font-size:12.5px}
+.kd-buy{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px}
+.kd-buy-info{font-size:12px;color:#4f6254;line-height:1.55;flex:1 1 220px}
+.kd-price{font-weight:850;color:var(--green-deep);font-size:15px;white-space:nowrap}
+.kd-price small{display:block;font-weight:600;color:var(--muted);font-size:10.5px;text-align:right}
+.kd-status{display:inline-flex;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;background:#e6f5de;color:#2f6b39}
+.kd-status.manual{background:#fff1d6;color:#8a5e12}.kd-status.pilih{background:#e8eefb;color:#2c4a86}
+.kd-status.habis,.kd-status.tidak{background:#fae8e4;color:#a84e3a}.kd-status.dapur{background:#eef0ea;color:#5d6b5f}
+.kd-line-actions{display:flex;flex-wrap:wrap;gap:8px}
+.kd-line-actions .button{min-height:44px;padding:10px 14px;font-size:12.5px}
+.kd-msg{margin:0;font-size:12px;color:#8a4a2a}
+.kd-empty{padding:34px 18px;text-align:center;border:1px dashed #d9e4cf;border-radius:20px;background:#fff;color:var(--muted)}
+.kd-empty strong{display:block;color:var(--green-deep);margin-bottom:6px;font-size:16px}
+.kd-summary-lines{display:grid;gap:8px}
+.kd-summary-lines div{display:flex;justify-content:space-between;gap:12px;font-size:14px}
+.kd-summary-lines .total{padding-top:10px;border-top:1px solid var(--line);font-weight:850;font-size:16px;color:var(--green-deep)}
+.kd-picker-results{display:grid;gap:10px;margin-top:12px}
+.kd-pick{display:grid;gap:8px;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.kd-pick strong{font-size:14px;color:var(--green-deep)}
+.kd-pick-units{display:flex;flex-wrap:wrap;gap:6px}
+.kd-pick-units button{min-height:44px;padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:#f7faee;font-size:12.5px;font-weight:750;text-align:left;color:#3d5a43}
+.kd-pick-units button:disabled{opacity:.45}
+.kd-pick-units small{display:block;font-weight:600;color:var(--muted)}
+
+@media(max-width:900px){
+  .rp-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .rp-slots{grid-template-columns:1fr}
+  .rp-slot{flex-direction:row;flex-wrap:wrap}
+  .rp-slot-recipe{grid-template-columns:96px 1fr;align-items:start;width:100%}
+}
+@media(max-width:560px){
+  .rp-hero{padding:18px 16px;border-radius:20px}
+  .rp-grid{gap:10px}
+  .rp-card-body{padding:10px}
+  .rp-card h3{font-size:13.5px}
+  .rp-card-buttons{grid-template-columns:1fr}
+  .rp-seg{width:100%}.rp-seg button{flex:1;padding-inline:8px}
+  .rp-actions .button{flex:1 1 calc(50% - 8px)}
+  .rp-slot-recipe{grid-template-columns:86px 1fr}
+  .kd-recipe{grid-template-columns:72px 1fr}
+}
+@media(min-width:901px){.rp-backdrop{align-items:center}.rp-sheet{border-radius:24px}}
+
+/* Perbaikan tata letak HP */
+.rp-slot-head{width:100%}
+.rp-photo.thumb .rp-photo-note,.kd-recipe .rp-photo .rp-photo-note{display:none}
+@media(max-width:720px){.rp-bar{bottom:var(--nav-h,66px);padding-bottom:10px}.rp-main{padding-bottom:150px}}
