@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Foto masakan belum tersedia">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3f7e4"/><stop offset="1" stop-color="#dcebc0"/></linearGradient>
+    <linearGradient id="bowl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e4eed2"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <circle cx="330" cy="50" r="70" fill="#ffffff" opacity=".35"/>
+  <path d="M62 210c-24-8-34-30-30-52 24 2 40 18 46 40z" fill="#4a8a4b" opacity=".22"/>
+  <path d="M352 232c20-10 24-32 14-50-22 6-34 24-34 44z" fill="#4a8a4b" opacity=".22"/>
+  <g fill="none" stroke="#7aa764" stroke-width="5" stroke-linecap="round" opacity=".75">
+    <path d="M168 92c-12 14 12 22 0 38"/><path d="M200 82c-12 14 12 22 0 38"/><path d="M232 92c-12 14 12 22 0 38"/>
+  </g>
+  <ellipse cx="200" cy="222" rx="104" ry="14" fill="#2f6b39" opacity=".12"/>
+  <path d="M96 158h208c0 50-40 76-104 76S96 208 96 158z" fill="url(#bowl)" stroke="#2f6b39" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M96 158h208" stroke="#2f6b39" stroke-width="5" stroke-linecap="round"/>
+  <path d="M132 158c8-22 34-22 42 0m18 0c8-26 40-26 48 0m16 0c6-16 26-16 32 0" fill="#9fc46a" stroke="#4a8a4b" stroke-width="3"/>
+</svg>
