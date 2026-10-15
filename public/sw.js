@@ -1,4 +1,4 @@
-const CACHE = "sayur-pasundan-static-v8";
+const CACHE = "sayur-pasundan-static-v9";
 const STATIC = ["/", "/assets/style.css", "/assets/app.js", "/assets/detail.js", "/assets/order.js", "/assets/favicon.svg", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png"];
 self.addEventListener("install", event => event.waitUntil(caches.open(CACHE).then(cache => Promise.allSettled(STATIC.map(url => cache.add(url)))).then(() => self.skipWaiting())));
 self.addEventListener("activate", event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())));

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2f6b39">
+  <meta name="description" content="Daftar kebutuhan bahan dari rencana menu Anda, dicocokkan dengan produk Sayur Pasundan dan siap dimasukkan ke keranjang.">
+  <title>Keranjang Kebutuhan Dapur — Sayur Pasundan</title>
+  <link rel="icon" href="/icon-192.png" type="image/png">
+  <link rel="stylesheet" href="/assets/style.css"><link rel="stylesheet" href="/assets/recipes.css">
+  <script src="/assets/units.js" defer></script>
+  <script src="/assets/recipe-core.js" defer></script>
+  <script src="/assets/kitchen.js" defer></script>
+</head>
+<body class="info-page recipe-page">
+  <div class="announcement">Keranjang Kebutuhan Dapur · Sayur Pasundan</div>
+  <header class="site-header"><a class="brand" href="/" aria-label="Beranda Sayur Pasundan"><img class="brand-wordmark" src="/assets/images/brand/logo-sayur-pasundan.webp" alt="Logo Sayur Pasundan" width="148" height="90"><span class="brand-caption">Rencanakan Masakan Anda</span></a><a class="button button-dark" href="/?keranjang=1">Keranjang <b id="cartBadge">0</b></a></header>
+  <main class="container rp-main" id="main">
+    <nav class="breadcrumbs"><a href="/">Beranda</a><span>›</span><a href="/masak-apa-hari-ini">Masak apa hari ini?</a><span>›</span><span>Kebutuhan dapur</span></nav>
+    <section class="rp-hero" aria-labelledby="kdTitle">
+      <p class="eyebrow"><span></span>DARI RESEP KE KERANJANG</p>
+      <h1 id="kdTitle">Keranjang kebutuhan dapur</h1>
+      <p>Bahan dari rencana menu Anda dikumpulkan di sini. Periksa dulu satuan resep dan satuan jual toko, pilih bahan yang ingin dibeli, lalu masukkan ke keranjang belanja.</p>
+      <div class="rp-actions"><a class="button button-ghost" href="/masak-apa-hari-ini">← Kembali ke rencana menu</a></div>
+    </section>
+    <div id="kdRoot" aria-live="polite"><div class="rp-skeleton"></div></div>
+  </main>
+
+  <div class="rp-bar" id="kdBar" hidden><div class="rp-bar-inner"><div><strong id="kdBarTitle"></strong><small id="kdBarSub"></small></div><button type="button" class="button button-orange" id="kdAddBtn">Tambahkan ke keranjang</button></div></div>
+  <div class="rp-backdrop" id="kdBackdrop" hidden><div class="rp-sheet" role="dialog" aria-modal="true" aria-labelledby="kdSheetTitle" id="kdSheet"></div></div>
+
+  <nav class="mobile-nav" aria-label="Navigasi cepat"><a href="/"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg><span class="nav-label">Beranda</span></a><a href="/#kategori"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg><span class="nav-label">Kategori</span></a><a href="/masak-apa-hari-ini" class="mobile-nav-active"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11h14v6a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3z"/><path d="M3 11h18"/><path d="M9 7c0-2 1.200-3 3-3s3 1 3 3"/></svg><span class="nav-label">Masak</span></a><a href="/?keranjang=1"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.2 11.1a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.4L22 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg><span class="nav-label">Keranjang</span></a><a href="/lacak-pesanan"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6l1 2h3v14H5V6h3z"/><path d="M9 4v2h6V4"/><path d="m9 13 2 2 4-4"/></svg><span class="nav-label">Lacak</span></a></nav>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
