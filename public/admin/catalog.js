@@ -50,7 +50,7 @@
       <div class="cat-grid">
         <label class="cat-field">Merk<input data-v="merk" value="${esc(v.merk || "")}" placeholder="mis. Fuji, Bendera" maxlength="100"></label>
         <label class="cat-field">Nama varian<input data-v="nama_varian" value="${esc(v.nama_varian || "")}" placeholder="mis. Merah, Hijau" maxlength="200"></label>
-        <label class="cat-field">Status<select data-v="status"><option value="active" ${String(v.status).toLowerCase() === "active" ? "selected" : ""}>Aktif (tampil)</option><option value="inactive" ${String(v.status).toLowerCase() === "inactive" ? "selected" : ""}>Nonaktif (disembunyikan)</option></select></label>
+        <label class="cat-field">Status<select data-v="status"><option value="active" ${String(v.status).toLowerCase() === "active" ? "selected" : ""}>Aktif (tampil)</option><option value="draft" ${String(v.status).toLowerCase() === "draft" ? "selected" : ""}>Draft (disembunyikan)</option></select></label>
       </div>
       <h4>Satuan &amp; harga</h4>
       <div class="cat-units">${units.map((u, i) => unitRow(u, v.id_varian, i)).join("")}${extra.map((u, i) => unitRow(u, v.id_varian, i)).join("")}${units.length + extra.length ? "" : `<p class="muted tiny">Belum ada satuan. Tambahkan satuan agar varian ini bisa dibeli.</p>`}</div>
